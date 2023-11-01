@@ -1,0 +1,30 @@
+{
+	"name": "thepipelinetool-ui-dev-container",
+	"build": {
+		"context": ".",
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"dart-code.dart-code",
+				"dart-code.flutter"
+			]
+		}
+	},
+	"runArgs": [
+		"--network=host"
+	],
+	"forwardPorts": [
+		8080,
+		8083
+	],
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+	],
+	"remoteUser": "vscode"
+	// "postCreateCommand": ""
+}
