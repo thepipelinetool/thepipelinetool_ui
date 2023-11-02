@@ -25,6 +25,6 @@
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
 	],
-	"remoteUser": "vscode"
+	// "remoteUser": "vscode"
 	// "postCreateCommand": ""
 }
