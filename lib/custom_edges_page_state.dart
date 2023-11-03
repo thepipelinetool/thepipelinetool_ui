@@ -25,7 +25,7 @@ class CustomEdgesPageState extends State<CustomEdgesPage> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
           // leading: const Icon(Icons.view_comfy),
-          title: const Text('Custom Edges Example')),
+          title: Text(widget.dagName)),
       body: InteractiveViewer(
         minScale: 0.3,
         boundaryMargin: const EdgeInsets.all(double.infinity),

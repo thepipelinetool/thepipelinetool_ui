@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class DagLink extends StatelessWidget {
-  const DagLink({super.key});
+  final String dagName;
+  const DagLink({super.key, required this.dagName});
 
   @override
   Widget build(BuildContext context) => MouseRegion(
@@ -11,10 +12,10 @@ class DagLink extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             // handle the tap event
-            context.go('/details');
+            context.goNamed('dag', pathParameters: {'dag_name': dagName});
           },
           child: Text(
-            'Click Me',
+            dagName,
             style: TextStyle(decoration: TextDecoration.underline), // optional
           ),
         ),
@@ -22,14 +23,19 @@ class DagLink extends StatelessWidget {
 }
 
 class HomeScreenRow extends StatelessWidget {
-  const HomeScreenRow({super.key});
+  final String dagName;
+
+  const HomeScreenRow({super.key, required this.dagName});
 
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          DagToggle(),
-          DagLink(),
-        ],
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+        child: Row(
+          children: [
+            DagToggle(),
+            DagLink(dagName: dagName),
+          ],
+        ),
       );
 }
 

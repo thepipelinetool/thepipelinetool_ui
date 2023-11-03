@@ -4,6 +4,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphite/graphite.dart';
 import 'package:thepipelinetool/custom_edges_page.dart';
@@ -18,13 +19,13 @@ import 'homescreen.dart';
 /// The buttons use context.go() to navigate to each destination. On mobile
 /// devices, each destination is deep-linkable and on the web, can be navigated
 /// to using the address bar.
-void main() => runApp(const MyApp());
+void main() => runApp(const ProviderScope(child: MyApp()));
 
 CustomTransitionPage<void> pageBuilder(
-    BuildContext context, GoRouterState state) {
+    BuildContext context, GoRouterState state, Widget widget) {
   return CustomTransitionPage<void>(
     key: state.pageKey,
-    child: const CustomEdgesPage(),
+    child: widget,
     transitionDuration: const Duration(milliseconds: 150),
     transitionsBuilder: (BuildContext context, Animation<double> animation,
         Animation<double> secondaryAnimation, Widget child) {
@@ -43,15 +44,17 @@ final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomeScreen();
-      },
+      // builder: (BuildContext context, GoRouterState state) {
+      //   return HomeScreen();
+      // },
       routes: <RouteBase>[
         GoRoute(
-          path: 'details',
-          pageBuilder: pageBuilder,
+          name: 'dag',
+          path: 'dag/:dag_name',
+          pageBuilder: (BuildContext context, GoRouterState state) => pageBuilder(context, state, CustomEdgesPage(dagName: state.pathParameters['dag_name']!)),
         ),
       ],
+      pageBuilder: (BuildContext context, GoRouterState state) => pageBuilder(context, state, HomeScreen()),
     ),
   ],
 );
@@ -65,10 +68,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: _router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
-
 
 const presetComplex = '['
     '{"id":"A","next":[{"outcome":"B","type":"one"}]},'

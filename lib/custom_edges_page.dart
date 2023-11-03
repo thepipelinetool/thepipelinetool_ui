@@ -7,9 +7,10 @@ import 'package:thepipelinetool/custom_edges_page_state.dart';
 import 'package:thepipelinetool/main.dart';
 
 class CustomEdgesPage extends StatefulWidget {
+  final String dagName;
   // final Widget Function(BuildContext context) bottomBar;
 
-  const CustomEdgesPage({Key? key}) : super(key: key);
+  const CustomEdgesPage({Key? key, required this.dagName}) : super(key: key);
   @override
   CustomEdgesPageState createState() {
     return CustomEdgesPageState();
