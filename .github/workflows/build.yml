@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - .github/workflows/web.yml
+      - lib/**
+      - pubspec.yaml
+
+
+env:
+  # update with the name of the main binary
+  binary: web
+  add_binaries_to_github_release: true
+
+jobs:
+  web:
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable' # or: 'beta', 'dev' or 'master'
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter build web --release
+
+      - name: Package as a zip
+        working-directory: ./build/web
+        run: |
+          zip --recurse-paths ../${{ env.binary }}.zip .
+
+      - name: Upload binaries to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.binary }}.zip
+          name: linux
+
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Upload binaries to release
+        if: ${{ env.add_binaries_to_github_release == 'true' }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.binary }}.zip
+          asset_name: ${{ env.binary }}-linux-${{NOW}}.zip
+          tag: ${{ github.ref }}
+          overwrite: true
