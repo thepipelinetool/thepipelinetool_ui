@@ -15,7 +15,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userProvider = ref.watch(fetchUserProvider);
+    final dagProvider = ref.watch(fetchDagsProvider);
 
     return Scaffold(
       appBar: AppBar(toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
@@ -40,7 +40,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
 
-              switch (userProvider) {
+              switch (dagProvider) {
                 // TODO: Handle this case.
                 AsyncData(:final value) => SliverList.separated(
                     itemCount: value.length,

@@ -109,7 +109,7 @@ class DetailsPageState extends State<DetailsPage>
                   child: MyDrawer(),
                 ),
                 body: TabBarView(controller: _tabController, children: [
-                  TaskView(scaffoldKey: _scaffoldKey,),
+                  TaskView(scaffoldKey: _scaffoldKey, widget.dagName),
                   GraphView(scaffoldKey: _scaffoldKey,),
                 ])),
           )

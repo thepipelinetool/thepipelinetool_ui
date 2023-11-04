@@ -38,7 +38,7 @@ import 'package:http/http.dart' as http;
 //   return jsonDecode(response.body) as List<String>;
 // }
 
-final fetchUserProvider = FutureProvider<List<String>>((ref) async {
+final fetchDagsProvider = FutureProvider<List<String>>((ref) async {
   // final json = await http.get('api/user/$userId');
   // return User.fromJson(json);
   final response = await http.get(

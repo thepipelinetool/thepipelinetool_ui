@@ -3,21 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphite/graphite.dart';
 
+import '../drawer/drawer.dart';
 import '../main.dart';
 
-final appStateProvider = StateNotifierProvider<AppStateNotifier, String>((ref) {
-  return AppStateNotifier();
-});
 
-class AppStateNotifier extends StateNotifier<String> {
-  AppStateNotifier() : super('Initial Data');
-  void updateData(String newData) {
-    state = newData;
-  }
-  // void updateData(String newData) {
-  //   state = state.copyWith(data: newData);
-  // }
-}
 
 // final appStateProvider2 =
 //     StateNotifierProvider<AppStateNotifier2, String>((ref) {
@@ -97,7 +86,7 @@ class GraphView extends ConsumerWidget {
           return p;
         },
         onNodeTapDown: (_, node, __) {
-          ref.read(appStateProvider.notifier).updateData(node.id);
+          ref.read(selectedTaskProvider.notifier).updateData(node.id);
           _onItemSelected(node.id);
         },
       ),
