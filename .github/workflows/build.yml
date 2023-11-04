@@ -37,15 +37,12 @@ jobs:
           path: ${{ env.binary }}.zip
           name: linux
 
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-
       - name: Upload binaries to release
         if: ${{ env.add_binaries_to_github_release == 'true' }}
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.binary }}.zip
-          asset_name: ${{ env.binary }}-linux-${{NOW}}.zip
+          asset_name: ${{ env.binary }}-linux-${{ github.event.head_commit.timestamp }}.zip
           tag: ${{ github.ref }}
           overwrite: true
