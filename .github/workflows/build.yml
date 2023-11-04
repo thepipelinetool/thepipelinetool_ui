@@ -49,5 +49,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.binary }}.zip
           asset_name: ${{ env.binary }}-${{ github.event.head_commit.timestamp }}.zip
-          tag: ${{ github.event.head_commit.timestamp }}
+          tag: ${{ github.sha }}
           overwrite: true
