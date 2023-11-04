@@ -34,7 +34,7 @@ jobs:
       - name: Package as a zip
         working-directory: ./build/web
         run: |
-          zip --recurse-paths ../${{ env.binary }}.zip .
+          zip --recurse-paths ../../${{ env.binary }}.zip .
 
       - name: Upload binaries to artifacts
         uses: actions/upload-artifact@v3
