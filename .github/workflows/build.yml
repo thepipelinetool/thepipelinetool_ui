@@ -42,6 +42,10 @@ jobs:
           path: ${{ env.binary }}.zip
           name: web
 
+      - name: set release date
+        run: |
+          echo "RELEASE_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
+
       - name: Upload binaries to release
         if: ${{ env.add_binaries_to_github_release == 'true' }}
         uses: svenstaro/upload-release-action@v2
@@ -49,5 +53,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.binary }}.zip
           asset_name: ${{ env.binary }}-${{ github.event.head_commit.timestamp }}.zip
-          tag: ${{ github.sha }}
+          tag: ${{ env.RELEASE_DATE }}
           overwrite: true
