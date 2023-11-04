@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: ${{ env.binary }}.zip
-          name: linux
+          name: web
 
       - name: Upload binaries to release
         if: ${{ env.add_binaries_to_github_release == 'true' }}
@@ -48,6 +48,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.binary }}.zip
-          asset_name: ${{ env.binary }}-linux-${{ github.event.head_commit.timestamp }}.zip
+          asset_name: ${{ env.binary }}-${{ github.event.head_commit.timestamp }}.zip
           tag: ${{ github.ref }}
           overwrite: true
