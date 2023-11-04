@@ -32,7 +32,7 @@ class HomeScreenRow extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 6, horizontal: 15),
         child: Row(
           children: [
-            DagToggle(),
+            // DagToggle(),
             DagLink(dagName: dagName),
           ],
         ),

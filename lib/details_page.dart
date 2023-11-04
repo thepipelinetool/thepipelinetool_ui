@@ -3,16 +3,16 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
-import 'package:thepipelinetool/custom_edges_page_state.dart';
+import 'package:thepipelinetool/details_page_state.dart';
 import 'package:thepipelinetool/main.dart';
 
-class CustomEdgesPage extends StatefulWidget {
+class DetailsPage extends StatefulWidget {
   final String dagName;
   // final Widget Function(BuildContext context) bottomBar;
 
-  const CustomEdgesPage({Key? key, required this.dagName}) : super(key: key);
+  const DetailsPage({Key? key, required this.dagName}) : super(key: key);
   @override
-  CustomEdgesPageState createState() {
-    return CustomEdgesPageState();
+  DetailsPageState createState() {
+    return DetailsPageState();
   }
 }

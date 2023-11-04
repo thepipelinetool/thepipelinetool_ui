@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphite/graphite.dart';
-import 'package:thepipelinetool/custom_edges_page.dart';
+import 'package:thepipelinetool/details_page.dart';
 
 import 'homescreen.dart';
 
@@ -47,14 +47,18 @@ final GoRouter _router = GoRouter(
       // builder: (BuildContext context, GoRouterState state) {
       //   return HomeScreen();
       // },
-      routes: <RouteBase>[
-        GoRoute(
-          name: 'dag',
-          path: 'dag/:dag_name',
-          pageBuilder: (BuildContext context, GoRouterState state) => pageBuilder(context, state, CustomEdgesPage(dagName: state.pathParameters['dag_name']!)),
-        ),
-      ],
-      pageBuilder: (BuildContext context, GoRouterState state) => pageBuilder(context, state, HomeScreen()),
+      // routes: <RouteBase>[
+      // ],
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          pageBuilder(context, state, HomeScreen()),
+    ),
+    GoRoute(
+      name: 'dag',
+      path: '/dag/:dag_name',
+      pageBuilder: (BuildContext context, GoRouterState state) => pageBuilder(
+          context,
+          state,
+          DetailsPage(dagName: state.pathParameters['dag_name']!)),
     ),
   ],
 );
