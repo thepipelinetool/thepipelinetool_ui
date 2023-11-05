@@ -55,8 +55,9 @@ final fetchGraphProvider = FutureProvider.autoDispose
   final map =
       (jsonDecode(response.body) as List<dynamic>).cast<Map<String, dynamic>>();
 
-  if (map.any((m) => m['status'] == "Pending")) {
+  if (runId != "default" && map.any((m) => m['status'] == "Pending")) {
     Future.delayed(const Duration(seconds: 3), () {
+      print('refresh');
       ref.invalidateSelf();
     });
   }
