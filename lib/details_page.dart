@@ -5,7 +5,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/details_page_state.dart';
-import 'package:thepipelinetool/main.dart';
 
 class DetailsPage extends ConsumerStatefulWidget {
   final String dagName;

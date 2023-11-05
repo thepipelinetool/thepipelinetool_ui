@@ -6,19 +6,27 @@ class MyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [Text("TPT"), Padding(padding: EdgeInsets.symmetric(horizontal: 30),child:MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () {
-            // handle the tap event
-            context.go('/');
-          },
-          child: Text(
-            'DAGS',
-            style: TextStyle(decoration: TextDecoration.underline), // optional
+    return Row(
+      children: [
+        const Text("TPT"),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                // handle the tap event
+                context.go('/');
+              },
+              child: const Text(
+                'DAGS',
+                style:
+                    TextStyle(decoration: TextDecoration.underline), // optional
+              ),
+            ),
           ),
-        ),
-      ))],);
+        )
+      ],
+    );
   }
-
 }

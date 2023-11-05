@@ -2,14 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphite/graphite.dart';
 import 'package:thepipelinetool/details_page.dart';
 
-import 'details_page_state.dart';
 import 'homescreen.dart';
 
 /// This sample app shows an app with two screens.
@@ -45,13 +42,8 @@ final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      // builder: (BuildContext context, GoRouterState state) {
-      //   return HomeScreen();
-      // },
-      // routes: <RouteBase>[
-      // ],
       pageBuilder: (BuildContext context, GoRouterState state) =>
-          pageBuilder(context, state, HomeScreen()),
+          pageBuilder(context, state, const HomeScreen()),
     ),
     GoRoute(
       name: 'dag',

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../views/graph_view.dart';
 
 final selectedTaskProvider = StateNotifierProvider<AppStateNotifier, String>((ref) {
   return AppStateNotifier();
@@ -19,6 +17,8 @@ class AppStateNotifier extends StateNotifier<String> {
 }
 
 class MyDrawer extends ConsumerWidget {
+  const MyDrawer({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(selectedTaskProvider);
