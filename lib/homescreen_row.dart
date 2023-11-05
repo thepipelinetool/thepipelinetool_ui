@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thepipelinetool/details_page_state.dart';
 
-class DagLink extends StatelessWidget {
+class DagLink extends ConsumerWidget {
   final String dagName;
   const DagLink({super.key, required this.dagName});
 
   @override
-  Widget build(BuildContext context) => MouseRegion(
+  Widget build(BuildContext context, WidgetRef ref) => MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: () {
             // handle the tap event
+            ref.invalidate(selectedItemProvider);
             context.goNamed('dag', pathParameters: {'dag_name': dagName});
           },
           child: Text(
@@ -39,22 +42,22 @@ class HomeScreenRow extends StatelessWidget {
       );
 }
 
-class DagToggle extends StatefulWidget {
-  const DagToggle({super.key});
+// class DagToggle extends StatefulWidget {
+//   const DagToggle({super.key});
 
-  @override
-  State<StatefulWidget> createState() => _DagToggleState();
-}
+//   @override
+//   State<StatefulWidget> createState() => _DagToggleState();
+// }
 
-class _DagToggleState extends State<DagToggle> {
-  bool on = false;
+// class _DagToggleState extends State<DagToggle> {
+//   bool on = false;
 
-  @override
-  Widget build(BuildContext context) => CupertinoSwitch(
-      value: on,
-      onChanged: (val) {
-        setState(() {
-          on = val;
-        });
-      });
-}
+//   @override
+//   Widget build(BuildContext context) => CupertinoSwitch(
+//       value: on,
+//       onChanged: (val) {
+//         setState(() {
+//           on = val;
+//         });
+//       });
+// }

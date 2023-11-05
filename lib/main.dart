@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:graphite/graphite.dart';
 import 'package:thepipelinetool/details_page.dart';
 
+import 'details_page_state.dart';
 import 'homescreen.dart';
 
 /// This sample app shows an app with two screens.
@@ -76,24 +77,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-const presetComplex = '['
-    '{"id":"A","next":[{"outcome":"B","type":"one"}]},'
-    '{"id":"U","next":[{"outcome":"G","type":"one"}]},'
-    '{"id":"B","next":[{"outcome":"C","type":"one"},{"outcome":"D","type":"one"},{"outcome":"E","type":"one"},{"outcome":"F","type":"one"},{"outcome":"M","type":"one"}]},'
-    '{"id":"C","next":[{"outcome":"G","type":"one"}]},'
-    '{"id":"D","next":[{"outcome":"H","type":"one"}]},'
-    '{"id":"E","next":[{"outcome":"H","type":"one"}]},'
-    '{"id":"F","next":[{"outcome":"W","type":"one"},{"outcome":"N","type":"one"},{"outcome":"O","type":"one"}]},'
-    '{"id":"W","next":[]},'
-    '{"id":"N","next":[{"outcome":"I","type":"one"}]},'
-    '{"id":"O","next":[{"outcome":"P","type":"one"}]},'
-    '{"id":"P","next":[{"outcome":"I","type":"one"}]},'
-    '{"id":"M","next":[{"outcome":"L","type":"one"}]},'
-    '{"id":"G","next":[{"outcome":"I","type":"one"}]},'
-    '{"id":"H","next":[{"outcome":"J","type":"one"}]},'
-    '{"id":"I","next":[]},'
-    '{"id":"J","next":[{"outcome":"K","type":"one"}]},'
-    '{"id":"K","next":[{"outcome":"L","type":"one"}]},'
-    '{"id":"L","next":[]}'
-    ']';

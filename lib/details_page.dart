@@ -3,10 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/details_page_state.dart';
 import 'package:thepipelinetool/main.dart';
 
-class DetailsPage extends StatefulWidget {
+class DetailsPage extends ConsumerStatefulWidget {
   final String dagName;
   // final Widget Function(BuildContext context) bottomBar;
 
