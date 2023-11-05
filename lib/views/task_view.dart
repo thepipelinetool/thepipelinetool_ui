@@ -5,17 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:thepipelinetool/views/graph_view.dart';
 
-final fetchTasksProvider = FutureProvider.autoDispose
-    .family<List<Map>, String>((ref, dagName) async {
-    final path = '/default_tasks/$dagName';
+final fetchTasksProvider =
+    FutureProvider.autoDispose.family<List<Map>, String>((ref, dagName) async {
+  // final path = '/default_tasks/$dagName';
 
   final response = await http.get(
-    Uri(
-      scheme: 'http',
-      host: 'localhost',
-      port: 8000,
-      path: path,
-    ),
+    Uri.parse('http://localhost:8000/default_tasks/$dagName'),
   );
 
   return (jsonDecode(response.body) as List<dynamic>).cast<Map>();
@@ -25,8 +20,7 @@ class TaskView extends ConsumerWidget {
   final String dagName;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const TaskView(this.dagName,
-      {super.key, required this.scaffoldKey});
+  const TaskView(this.dagName, {super.key, required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

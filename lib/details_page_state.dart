@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/appbar.dart';
@@ -40,11 +39,12 @@ class DetailsPageState extends ConsumerState<DetailsPage>
 
   @override
   void dispose() {
-    _tabController.dispose();
+    // _tabController.dispose();
     super.dispose();
   }
 
   late TabController _tabController;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,8 @@ class DetailsPageState extends ConsumerState<DetailsPage>
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
                     widget.dagName,
                     style: const TextStyle(fontSize: 25),
@@ -93,7 +94,7 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                     scaffoldKey: _scaffoldKey,
                     widget.dagName,
                   ),
-                  GraphView(scaffoldKey: _scaffoldKey, widget.dagName),
+                  GraphView(dagName: widget.dagName, scaffoldKey: _scaffoldKey),
                 ],
               ),
             ),

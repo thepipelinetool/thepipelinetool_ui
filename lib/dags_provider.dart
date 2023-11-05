@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:thepipelinetool/deserialize/dag_options.dart';
 // import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // part 'provider.g.dart';
@@ -38,19 +39,20 @@ import 'package:http/http.dart' as http;
 //   return jsonDecode(response.body) as List<String>;
 // }
 
-final fetchDagsProvider = FutureProvider<List<String>>((ref) async {
+
+
+final fetchDagsOptionsProvider = FutureProvider<List<DagOptions>>((ref) async {
   // final json = await http.get('api/user/$userId');
   // return User.fromJson(json);
   final response = await http.get(
-    Uri(
-      scheme: 'http',
-      host: 'localhost',
-      port: 8000,
-      path: '/dags',
+    Uri.parse('http://localhost:8000/dags'),
       // No need to manually encode the query parameters, the "Uri" class does it for us.
       // queryParameters: {'type': activityType},
-    ),
+    
   );
 
-  return (jsonDecode(response.body) as List<dynamic>).cast<String>();
+  return (jsonDecode(response.body) as List<dynamic>)
+      .cast<Map<String, dynamic>>()
+      .map((e) => DagOptions.fromJson(e))
+      .toList(growable: false);
 });
