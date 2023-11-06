@@ -64,7 +64,7 @@ class _TableBodyState extends State<TableBody> {
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
             ),
-            children: List.generate(widget.tasks.length - 1, (index) {
+            children: List.generate(widget.tasks.length, (index) {
               return Container(
                 // color: Colors.green,
                 height: cellHeight,
@@ -87,7 +87,7 @@ class _TableBodyState extends State<TableBody> {
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics(),
                 ),
-                children: List.generate(widget.tasks.length - 1, (y) {
+                children: List.generate(widget.tasks.length, (y) {
                   final runIds = widget.runs.keys.toList(growable: false);
 
                   return Row(
