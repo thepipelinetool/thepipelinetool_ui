@@ -103,6 +103,7 @@ class GraphViewState extends ConsumerState<GraphView>
     final runs = ref.watch(fetchRunsProvider(widget.dagName));
     final graph = ref.watch(fetchGraphProvider(widget.dagName));
 
+
     return Column(children: [
       Align(
           alignment: Alignment.centerLeft,
@@ -131,6 +132,11 @@ class GraphViewState extends ConsumerState<GraphView>
         AsyncData(:final value) => () {
             final list = value.map((m) => NodeInput.fromJson(m)).toList();
 
+          final map = {};
+          for (final json in value) {
+            map[json["id"]] = json;
+          }
+
             return InteractiveViewer(
               minScale: 0.3,
               boundaryMargin: const EdgeInsets.all(double.infinity),
@@ -139,7 +145,7 @@ class GraphViewState extends ConsumerState<GraphView>
                 opacity: _animation,
                 child: DirectGraph(
                   list: list,
-                  defaultCellSize: const Size(104.0, 104.0 / 2),
+                  defaultCellSize: const Size(154.0, 104.0 / 2),
                   cellPadding: const EdgeInsets.all(14),
                   contactEdgesDistance: 5.0,
                   orientation: MatrixOrientation.Horizontal,
@@ -153,7 +159,7 @@ class GraphViewState extends ConsumerState<GraphView>
                       child: Card(
                         child: Center(
                           child: Text(
-                            node.id,
+                            map[node.id]["name"],
                             style: const TextStyle(fontSize: 20.0),
                           ),
                         ),
