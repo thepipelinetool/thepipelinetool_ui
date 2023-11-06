@@ -29,7 +29,7 @@ final List<Tab> myTabs = ['Tasks', 'Graph']
 
 class DetailsPageState extends ConsumerState<DetailsPage>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -84,9 +84,12 @@ class DetailsPageState extends ConsumerState<DetailsPage>
           ),
           Expanded(
             child: Scaffold(
-              key: _scaffoldKey,
-              endDrawer: const Drawer(
-                child: MyDrawer(),
+              // key: _scaffoldKey,
+              endDrawer: Drawer(
+                child: MyDrawer(
+                  key: Key('Drawer'),
+                  dagName: widget.dagName,
+                ),
               ),
               body: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
@@ -94,9 +97,12 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                 children: [
                   TaskView(
                     widget.dagName,
-                    _scaffoldKey,
+                    // _scaffoldKey,
                   ),
-                  GraphView(dagName: widget.dagName, scaffoldKey: _scaffoldKey),
+                  GraphView(dagName: widget.dagName,
+                  //  scaffoldKey: _scaffoldKey
+                   )
+                   ,
                 ],
               ),
             ),

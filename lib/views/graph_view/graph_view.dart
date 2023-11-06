@@ -35,7 +35,7 @@ final selectedItemProvider =
 });
 
 final fetchGraphProvider = FutureProvider.autoDispose
-    .family<List<Map<String, dynamic>>, String>((ref, dagName) async {
+    .family<(List<Map<String, dynamic>>, String), String>((ref, dagName) async {
   final runId = ref.watch(selectedItemProvider(dagName));
 
   var path = '/graph/$dagName/$runId';
@@ -58,7 +58,7 @@ final fetchGraphProvider = FutureProvider.autoDispose
     });
   }
 
-  return map;
+  return (map, runId);
 });
 
 // "Pending" => Colors.grey,
@@ -84,9 +84,9 @@ final fetchRunsProvider = FutureProvider.family
 
 class GraphView extends ConsumerStatefulWidget {
   final String dagName;
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  //final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const GraphView({super.key, required this.dagName, required this.scaffoldKey});
+  const GraphView({super.key, required this.dagName});
 
   @override
   GraphViewState createState() => GraphViewState();
@@ -156,10 +156,12 @@ class GraphViewState extends ConsumerState<GraphView>
           Expanded(
               child: switch (graph) {
             AsyncData(:final value) => () {
-                final list = value.map((m) => NodeInput.fromJson(m)).toList();
+                final (graph, runId) = value;
+
+                final list = graph.map((m) => NodeInput.fromJson(m)).toList();
 
                 final map = {};
-                for (final json in value) {
+                for (final json in graph) {
                   map[json["id"]] = json;
                 }
 
@@ -198,8 +200,8 @@ class GraphViewState extends ConsumerState<GraphView>
                       onNodeTapUp: (_, node, __) {
                         ref
                             .read(selectedTaskProvider.notifier)
-                            .updateData(node.id);
-                        widget.scaffoldKey.currentState!.openEndDrawer();
+                            .updateData(SelectedTask(runId: runId,taskId: node.id));
+                        Scaffold.of(context).openEndDrawer();
                       },
                     ),
                   ),

@@ -8,9 +8,15 @@ class MultiplicationTable extends StatefulWidget {
   final String dagName;
   final List<Map<dynamic, dynamic>> tasks;
   final Map<String, dynamic> runs;
+  //final GlobalKey<ScaffoldState> scaffoldKey;
 
   const MultiplicationTable(
-      {super.key, required this.tasks, required this.runs, required this.dagName});
+      {super.key,
+      required this.tasks,
+      required this.runs,
+      required this.dagName,
+      // required this.scaffoldKey
+      });
   @override
   MultiplicationTableState createState() => MultiplicationTableState();
 }
@@ -49,6 +55,7 @@ class MultiplicationTableState extends State<MultiplicationTable> {
             tasks: widget.tasks,
             runs: widget.runs,
             dagName: widget.dagName,
+            // scaffoldKey: widget.scaffoldKey,
           ),
         ),
       ],

@@ -29,24 +29,28 @@ final fetchRunsWithTasksProvider = FutureProvider.family
 class TaskView extends ConsumerStatefulWidget {
   // final Widget Function(BuildContext context) bottomBar;
   final String dagName;
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  //final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const TaskView(this.dagName, this.scaffoldKey, {Key? key}) : super(key: key);
+  const TaskView(this.dagName,
+  //  this.scaffoldKey, 
+  {Key? key}) : super(key: key);
   @override
   TaskViewState createState() => TaskViewState();
 }
 
-final combinedProvider = FutureProvider.family.autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
+final combinedProvider = FutureProvider.family
+    .autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
   final taskProvider = await ref.watch(fetchTasksProvider(dagName).future);
-  final runsProvider = await ref.watch(fetchRunsWithTasksProvider(dagName).future);
+  final runsProvider =
+      await ref.watch(fetchRunsWithTasksProvider(dagName).future);
   return {
     'tasks': taskProvider,
     'runs': runsProvider,
   };
 });
 
-class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixin {
-
+class TaskViewState extends ConsumerState<TaskView>
+    with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 300),
     vsync: this,
@@ -56,7 +60,7 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
     curve: Curves.easeIn,
   );
 
-    @override
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -68,10 +72,15 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
     final provider = ref.watch(combinedProvider(widget.dagName));
 
     return switch (provider) {
-      AsyncData(:final value) => 
-      FadeTransition(
-      opacity: _animation,
-      child: MultiplicationTable(tasks: value["tasks"], runs: value["runs"], dagName: widget.dagName,),),
+      AsyncData(:final value) => FadeTransition(
+          opacity: _animation,
+          child: MultiplicationTable(
+            tasks: value["tasks"],
+            runs: value["runs"],
+            dagName: widget.dagName,
+            // scaffoldKey: widget.scaffoldKey,
+          ),
+        ),
       // CustomScrollView(slivers: [
       //     SliverList.separated(
       //       itemCount: value.length,

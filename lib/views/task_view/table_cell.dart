@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import '../../drawer/drawer.dart';
+
 const double cellHeight = 20;
 const double firstCellWidth = 100;
 
@@ -65,8 +67,11 @@ class MultiplicationTableCell extends ConsumerWidget {
   final String runId;
   final Map value;
   // final Color color;
+  //final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const MultiplicationTableCell({super.key, 
+  const MultiplicationTableCell({
+    super.key,
+    // required this.scaffoldKey,
     required this.value,
     required this.runId,
     required this.dagName,
@@ -114,8 +119,12 @@ class MultiplicationTableCell extends ConsumerWidget {
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
-              print(runId);
-              print(value);
+              // print(runId);
+              // print(value);
+              Scaffold.of(context).openEndDrawer();
+              ref.read(selectedTaskProvider.notifier).updateData(
+                  SelectedTask(runId: runId, taskId: value["id"].toString()));
+              // scaffoldKey.currentState!.openEndDrawer();
             },
             child: Container(
               decoration: BoxDecoration(

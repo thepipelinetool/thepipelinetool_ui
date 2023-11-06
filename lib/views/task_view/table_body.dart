@@ -10,14 +10,17 @@ class TableBody extends StatefulWidget {
   final String dagName;
   final List<Map<dynamic, dynamic>> tasks;
   final Map<String, dynamic> runs;
+  //final GlobalKey<ScaffoldState> scaffoldKey;
 
   final ScrollController scrollController;
 
-  const TableBody({super.key, 
+  const TableBody({
+    super.key,
     required this.scrollController,
     required this.tasks,
     required this.runs,
     required this.dagName,
+    // required this.scaffoldKey,
   });
 
   @override
@@ -67,13 +70,19 @@ class TableBodyState extends State<TableBody> {
               parent: BouncingScrollPhysics(),
             ),
             children: List.generate(widget.tasks.length, (index) {
-              return SizedBox(
+              return 
+              // Container(
+              //   padding: EdgeInsets.only(top: 2),
+              //   child: 
+              Container(
                 // color: Colors.green,
                 height: cellHeight,
                 width: firstCellWidth,
-                child: Text(
+                child: FittedBox(
+        fit: BoxFit.fitHeight, 
+        child:Text(
                     "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
-              );
+              ));
             }),
           ),
         ),
@@ -100,13 +109,14 @@ class TableBodyState extends State<TableBody> {
                       final containsFunction =
                           widget.runs[runId].containsKey(key);
 
-                          // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
+                      // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
 
                       if (containsFunction) {
                         return MultiplicationTableCell(
                           dagName: widget.dagName,
                           runId: runId,
                           value: widget.runs[runId][key],
+                          // scaffoldKey: widget.scaffoldKey,
                           // color: Colors.red,
                         );
                       }
@@ -115,9 +125,9 @@ class TableBodyState extends State<TableBody> {
 
                       return MultiplicationTableCell(
                         dagName: widget.dagName,
-
                         runId: '',
                         value: const {},
+                        // scaffoldKey: widget.scaffoldKey,
                         // color: Colors.red,
                       );
                     }).toList(growable: false),
