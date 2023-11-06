@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/appbar.dart';
 import 'package:thepipelinetool/details_page.dart';
 import 'package:thepipelinetool/drawer/drawer.dart';
-import 'package:thepipelinetool/views/graph_view.dart';
+import 'package:thepipelinetool/views/graph_view/graph_view.dart';
 
 import 'views/task_view/task_view.dart';
 

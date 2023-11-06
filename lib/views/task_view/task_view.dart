@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
-import 'package:thepipelinetool/views/graph_view.dart';
+import 'package:thepipelinetool/views/graph_view/graph_view.dart';
 
 import 'multiplication_table.dart';
 
@@ -47,9 +47,22 @@ final combinedProvider = FutureProvider.family.autoDispose<Map<String, dynamic>,
   };
 });
 
-class TaskViewState extends ConsumerState<TaskView> {
+class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixin {
 
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 300),
+    vsync: this,
+  )..forward();
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeIn,
+  );
 
+    @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   // TaskViewState(this.dagName, {super.key, required this.scaffoldKey});
 
   @override
@@ -58,7 +71,9 @@ class TaskViewState extends ConsumerState<TaskView> {
 
     return switch (provider) {
       AsyncData(:final value) => 
-      MultiplicationTable(tasks: value["tasks"], runs: value["runs"],),
+      FadeTransition(
+      opacity: _animation,
+      child: MultiplicationTable(tasks: value["tasks"], runs: value["runs"], dagName: widget.dagName,),),
       // CustomScrollView(slivers: [
       //     SliverList.separated(
       //       itemCount: value.length,
@@ -70,7 +85,8 @@ class TaskViewState extends ConsumerState<TaskView> {
       //     )
       //   ]),
       AsyncError() => const Text('Oops, something unexpected happened'),
-      _ => const Center(child: CircularProgressIndicator()),
+      _ => Container(),
+      // const Center(child: CircularProgressIndicator()),
     };
   }
 }

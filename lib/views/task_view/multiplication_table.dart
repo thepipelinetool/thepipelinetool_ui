@@ -5,11 +5,12 @@ import 'table_head.dart';
 import 'table_body.dart';
 
 class MultiplicationTable extends StatefulWidget {
+  final String dagName;
   final List<Map<dynamic, dynamic>> tasks;
   final Map<String, dynamic> runs;
 
   const MultiplicationTable(
-      {super.key, required this.tasks, required this.runs});
+      {super.key, required this.tasks, required this.runs, required this.dagName});
   @override
   _MultiplicationTableState createState() => _MultiplicationTableState();
 }
@@ -47,6 +48,7 @@ class _MultiplicationTableState extends State<MultiplicationTable> {
             scrollController: _bodyController,
             tasks: widget.tasks,
             runs: widget.runs,
+            dagName: widget.dagName,
           ),
         ),
       ],

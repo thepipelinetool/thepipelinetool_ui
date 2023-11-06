@@ -25,13 +25,13 @@ class TableHead extends StatelessWidget {
           Container(
             width: firstCellWidth,
             height: cellHeight,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              border: Border.all(
-                color: Colors.black12,
-                width: 1.0,
-              ),
-            ),
+            // decoration: BoxDecoration(
+            //   color: Colors.blue,
+            //   border: Border.all(
+            //     color: Colors.black12,
+            //     width: 1.0,
+            //   ),
+            // ),
             alignment: Alignment.center,
             child: Text(
               '',
@@ -47,17 +47,30 @@ class TableHead extends StatelessWidget {
                 return Container(
                   width: cellHeight,
                   height: cellHeight,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    border: Border.all(
-                      color: Colors.black12,
-                      width: 1.0,
-                    ),
-                  ),
+
                   alignment: Alignment.center,
                   child: Padding(
-                      padding: EdgeInsets.all(2),
-                      child: Container(color: Colors.green)),
+                    padding: EdgeInsets.all(4.5),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          // print(runId);
+                          // print(value);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.green, // TODO
+                            borderRadius: BorderRadius.circular(50),
+                            // border: Border.all(
+                            //   color: Colors.black12,
+                            //   width: 1.0,
+                            // ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   // Text(
                   //   '${value ?? ''}',
                   //   style: TextStyle(fontSize: 16.0),

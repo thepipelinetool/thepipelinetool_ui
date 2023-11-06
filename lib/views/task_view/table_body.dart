@@ -5,6 +5,7 @@ import 'table_cell.dart';
 import 'constants.dart';
 
 class TableBody extends StatefulWidget {
+  final String dagName;
   final List<Map<dynamic, dynamic>> tasks;
   final Map<String, dynamic> runs;
 
@@ -14,6 +15,7 @@ class TableBody extends StatefulWidget {
     required this.scrollController,
     required this.tasks,
     required this.runs,
+    required this.dagName,
   });
 
   @override
@@ -64,10 +66,11 @@ class _TableBodyState extends State<TableBody> {
             ),
             children: List.generate(widget.tasks.length - 1, (index) {
               return Container(
-                color: Colors.green,
+                // color: Colors.green,
                 height: cellHeight,
                 width: firstCellWidth,
-                child: Text("${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
+                child: Text(
+                    "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
               );
             }),
           ),
@@ -95,8 +98,11 @@ class _TableBodyState extends State<TableBody> {
                       final containsFunction =
                           widget.runs[runId].containsKey(key);
 
+                          // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
+
                       if (containsFunction) {
                         return MultiplicationTableCell(
+                          dagName: widget.dagName,
                           runId: runId,
                           value: widget.runs[runId][key],
                           // color: Colors.red,
@@ -106,6 +112,8 @@ class _TableBodyState extends State<TableBody> {
                       // print(widget.tasks[y]);
 
                       return MultiplicationTableCell(
+                        dagName: widget.dagName,
+
                         runId: '',
                         value: {},
                         // color: Colors.red,
