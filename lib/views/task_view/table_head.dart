@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'table_cell.dart';
-import 'constants.dart';
 
 class TableHead extends StatelessWidget {
   final Map<String, dynamic> runs;
   final ScrollController scrollController;
 
-  TableHead({
+  const TableHead({super.key, 
     required this.scrollController,
     required this.runs,
   });
@@ -33,7 +32,7 @@ class TableHead extends StatelessWidget {
             //   ),
             // ),
             alignment: Alignment.center,
-            child: Text(
+            child: const Text(
               '',
               style: TextStyle(fontSize: 16.0),
             ),
@@ -41,7 +40,7 @@ class TableHead extends StatelessWidget {
           Expanded(
             child: ListView(
               controller: scrollController,
-              physics: ClampingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               children: List.generate(runs.length, (index) {
                 return Container(
@@ -50,7 +49,7 @@ class TableHead extends StatelessWidget {
 
                   alignment: Alignment.center,
                   child: Padding(
-                    padding: EdgeInsets.all(4.5),
+                    padding: const EdgeInsets.all(4.5),
                     child: MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(

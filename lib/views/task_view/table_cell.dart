@@ -22,7 +22,7 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
 
   if (map['status'] == "Pending") {
     Future.delayed(const Duration(seconds: 3), () {
-      print('refresh');
+      // print('refresh');
       ref.invalidateSelf();
     });
   }
@@ -31,8 +31,8 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
   // return {"status": "Pending"};
 });
 
-Color getStylingForGridStatus(String task_status) {
-  return switch (task_status) {
+Color getStylingForGridStatus(String taskStatus) {
+  return switch (taskStatus) {
     "Pending" => Colors.grey,
     "Success" => Colors.green,
     "Failure" => Colors.red,
@@ -66,7 +66,7 @@ class MultiplicationTableCell extends ConsumerWidget {
   final Map value;
   // final Color color;
 
-  MultiplicationTableCell({
+  const MultiplicationTableCell({super.key, 
     required this.value,
     required this.runId,
     required this.dagName,
@@ -109,7 +109,7 @@ class MultiplicationTableCell extends ConsumerWidget {
       // ),
       alignment: Alignment.center,
       child: Padding(
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(

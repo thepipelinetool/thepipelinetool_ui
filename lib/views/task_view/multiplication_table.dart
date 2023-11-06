@@ -12,10 +12,10 @@ class MultiplicationTable extends StatefulWidget {
   const MultiplicationTable(
       {super.key, required this.tasks, required this.runs, required this.dagName});
   @override
-  _MultiplicationTableState createState() => _MultiplicationTableState();
+  MultiplicationTableState createState() => MultiplicationTableState();
 }
 
-class _MultiplicationTableState extends State<MultiplicationTable> {
+class MultiplicationTableState extends State<MultiplicationTable> {
   late LinkedScrollControllerGroup _controllers;
   late ScrollController _headController;
   late ScrollController _bodyController;

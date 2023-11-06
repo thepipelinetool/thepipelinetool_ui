@@ -53,7 +53,7 @@ final fetchGraphProvider = FutureProvider.autoDispose
       map.any(
           (m) => {"Pending", "Running", "Retrying"}.contains(m['status']))) {
     Future.delayed(const Duration(seconds: 3), () {
-      print('refresh');
+      // print('refresh');
       ref.invalidateSelf();
     });
   }
@@ -74,10 +74,11 @@ final fetchRunsProvider = FutureProvider.family
     Uri.parse('http://localhost:8000/runs/$dagName'),
   );
 
+
   return (jsonDecode(response.body) as List<dynamic>)
       .cast<int>()
       .map((i) => i.toString())
-      .toList()
+      .toList().reversed.toList()
     ..add('default');
 });
 
@@ -85,7 +86,7 @@ class GraphView extends ConsumerStatefulWidget {
   final String dagName;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  GraphView({super.key, required this.dagName, required this.scaffoldKey});
+  const GraphView({super.key, required this.dagName, required this.scaffoldKey});
 
   @override
   GraphViewState createState() => GraphViewState();
@@ -96,6 +97,8 @@ class GraphViewState extends ConsumerState<GraphView>
   @override
   void dispose() {
     _controller.dispose();
+    _controller2.dispose();
+
     super.dispose();
   }
   // GraphViewState(this.dagName, {required this.scaffoldKey});
@@ -106,6 +109,15 @@ class GraphViewState extends ConsumerState<GraphView>
   )..forward();
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
+    curve: Curves.easeIn,
+  );
+
+  late final AnimationController _controller2 = AnimationController(
+    duration: const Duration(milliseconds: 300),
+    vsync: this,
+  )..forward();
+  late final Animation<double> _animation2 = CurvedAnimation(
+    parent: _controller2,
     curve: Curves.easeIn,
   );
 
@@ -151,42 +163,45 @@ class GraphViewState extends ConsumerState<GraphView>
                   map[json["id"]] = json;
                 }
 
-                return InteractiveViewer(
-                  minScale: 0.3,
-                  boundaryMargin: const EdgeInsets.all(double.infinity),
-                  constrained: false,
-                  child: DirectGraph(
-                    list: list,
-                    defaultCellSize: const Size(154.0, 104.0 / 2),
-                    cellPadding: const EdgeInsets.all(14),
-                    contactEdgesDistance: 5.0,
-                    orientation: MatrixOrientation.Horizontal,
-                    centered: true,
-                    onEdgeTapDown: (details, edge) {
-                      print("${edge.from.id}->${edge.to.id}");
-                    },
-                    nodeBuilder: (ctx, node) {
-                      return MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: NodeCard(
-                            dagName: widget.dagName, info: map[node.id]),
-                      );
-                    },
-                    paintBuilder: (edge) {
-                      var p = Paint()
-                        ..color = Colors.blueGrey
-                        ..style = PaintingStyle.stroke
-                        ..strokeCap = StrokeCap.round
-                        ..strokeJoin = StrokeJoin.round
-                        ..strokeWidth = 2;
-                      return p;
-                    },
-                    onNodeTapUp: (_, node, __) {
-                      ref
-                          .read(selectedTaskProvider.notifier)
-                          .updateData(node.id);
-                      widget.scaffoldKey.currentState!.openEndDrawer();
-                    },
+                return FadeTransition(
+                  opacity: _animation2,
+                  child: InteractiveViewer(
+                    minScale: 0.3,
+                    boundaryMargin: const EdgeInsets.all(double.infinity),
+                    constrained: false,
+                    child: DirectGraph(
+                      list: list,
+                      defaultCellSize: const Size(154.0, 104.0 / 2),
+                      cellPadding: const EdgeInsets.all(14),
+                      contactEdgesDistance: 5.0,
+                      orientation: MatrixOrientation.Horizontal,
+                      centered: true,
+                      onEdgeTapDown: (details, edge) {
+                        // print("${edge.from.id}->${edge.to.id}");
+                      },
+                      nodeBuilder: (ctx, node) {
+                        return MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: NodeCard(
+                              dagName: widget.dagName, info: map[node.id]),
+                        );
+                      },
+                      paintBuilder: (edge) {
+                        var p = Paint()
+                          ..color = Colors.blueGrey
+                          ..style = PaintingStyle.stroke
+                          ..strokeCap = StrokeCap.round
+                          ..strokeJoin = StrokeJoin.round
+                          ..strokeWidth = 2;
+                        return p;
+                      },
+                      onNodeTapUp: (_, node, __) {
+                        ref
+                            .read(selectedTaskProvider.notifier)
+                            .updateData(node.id);
+                        widget.scaffoldKey.currentState!.openEndDrawer();
+                      },
+                    ),
                   ),
                 );
               }(),

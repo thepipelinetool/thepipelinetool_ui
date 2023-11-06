@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
@@ -11,7 +13,7 @@ class TableBody extends StatefulWidget {
 
   final ScrollController scrollController;
 
-  TableBody({
+  const TableBody({super.key, 
     required this.scrollController,
     required this.tasks,
     required this.runs,
@@ -19,10 +21,10 @@ class TableBody extends StatefulWidget {
   });
 
   @override
-  _TableBodyState createState() => _TableBodyState();
+  TableBodyState createState() => TableBodyState();
 }
 
-class _TableBodyState extends State<TableBody> {
+class TableBodyState extends State<TableBody> {
   late LinkedScrollControllerGroup _controllers;
   late ScrollController _firstColumnController;
   late ScrollController _restColumnsController;
@@ -65,7 +67,7 @@ class _TableBodyState extends State<TableBody> {
               parent: BouncingScrollPhysics(),
             ),
             children: List.generate(widget.tasks.length, (index) {
-              return Container(
+              return SizedBox(
                 // color: Colors.green,
                 height: cellHeight,
                 width: firstCellWidth,
@@ -115,7 +117,7 @@ class _TableBodyState extends State<TableBody> {
                         dagName: widget.dagName,
 
                         runId: '',
-                        value: {},
+                        value: const {},
                         // color: Colors.red,
                       );
                     }).toList(growable: false),

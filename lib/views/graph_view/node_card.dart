@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../task_view/table_cell.dart';
@@ -10,7 +9,7 @@ class NodeCard extends ConsumerWidget {
   // final String runId;
   final Map info;
 
-  NodeCard(
+  const NodeCard(
       {super.key,
       required this.dagName,
       // required this.runId,
