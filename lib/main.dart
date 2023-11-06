@@ -66,6 +66,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+            // primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
     );
   }
 }

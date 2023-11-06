@@ -28,7 +28,7 @@ final selectedItemProvider =
   final runs = ref.watch(fetchRunsProvider(dagName));
 
   return switch (runs) {
-    AsyncData(:final value) => value.isNotEmpty ? value.first : 'default',
+    AsyncData(:final value) =>  value.first,
     (_) => 'default'
   };
 });
@@ -67,8 +67,7 @@ final fetchRunsProvider = FutureProvider.family
   return (jsonDecode(response.body) as List<dynamic>)
       .cast<int>()
       .map((i) => i.toString())
-      .toList()
-    ..add('default');
+      .toList()..add('default');
 });
 
 class GraphView extends ConsumerStatefulWidget {
@@ -149,11 +148,14 @@ class GraphViewState extends ConsumerState<GraphView>
                     print("${edge.from.id}->${edge.to.id}");
                   },
                   nodeBuilder: (ctx, node) {
-                    return Card(
-                      child: Center(
-                        child: Text(
-                          node.id,
-                          style: const TextStyle(fontSize: 20.0),
+                    return MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Card(
+                        child: Center(
+                          child: Text(
+                            node.id,
+                            style: const TextStyle(fontSize: 20.0),
+                          ),
                         ),
                       ),
                     );
@@ -167,7 +169,7 @@ class GraphViewState extends ConsumerState<GraphView>
                       ..strokeWidth = 2;
                     return p;
                   },
-                  onNodeTapDown: (_, node, __) {
+                  onNodeTapUp: (_, node, __) {
                     ref.read(selectedTaskProvider.notifier).updateData(node.id);
                     widget.scaffoldKey.currentState!.openEndDrawer();
                   },

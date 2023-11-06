@@ -8,7 +8,8 @@ import 'package:thepipelinetool/appbar.dart';
 import 'package:thepipelinetool/details_page.dart';
 import 'package:thepipelinetool/drawer/drawer.dart';
 import 'package:thepipelinetool/views/graph_view.dart';
-import 'package:thepipelinetool/views/task_view.dart';
+
+import 'views/task_view/task_view.dart';
 
 const kMyToolbarHeight = 50.0;
 
@@ -44,7 +45,6 @@ class DetailsPageState extends ConsumerState<DetailsPage>
   }
 
   late TabController _tabController;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +71,7 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                   labelPadding: const EdgeInsets.only(right: 10),
                   // padding: EdgeInsets.symmetric(horizontal: 20),
                   isScrollable: true,
+
                   controller: _tabController,
                   tabs: myTabs,
                   indicator: BoxDecoration(
@@ -88,11 +89,12 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                 child: MyDrawer(),
               ),
               body: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 children: [
                   TaskView(
-                    scaffoldKey: _scaffoldKey,
                     widget.dagName,
+                    _scaffoldKey,
                   ),
                   GraphView(dagName: widget.dagName, scaffoldKey: _scaffoldKey),
                 ],
