@@ -19,7 +19,7 @@ class NodeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final runId = ref.watch(selectedItemProvider(dagName));
-    var color = Colors.transparent;
+    var color = Colors.grey.shade400;
 
     if (runId != "default") {
       // print((dagName.runtimeType, runId.runtimeType, info["id"].runtimeType));
@@ -44,6 +44,7 @@ class NodeCard extends ConsumerWidget {
             width: 4.0,
             
           ),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(4)
         ),
         child: Center(
