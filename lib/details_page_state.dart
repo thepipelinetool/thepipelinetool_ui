@@ -13,7 +13,9 @@ import 'views/task_view/task_view.dart';
 
 const kMyToolbarHeight = 50.0;
 
-final List<Tab> myTabs = ['Tasks', 'Graph']
+final List<Tab> myTabs = ['Tasks',
+'Graph'
+]
     .map((e) => Tab(
             child: Container(
           height: 40,
@@ -51,47 +53,57 @@ class DetailsPageState extends ConsumerState<DetailsPage>
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            height: 70,
-            child: Row(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(
-                    widget.dagName,
-                    style: const TextStyle(fontSize: 25),
-                  ),
-                ),
-                TabBar(
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelPadding: const EdgeInsets.only(right: 10),
-                  // padding: EdgeInsets.symmetric(horizontal: 20),
-                  isScrollable: true,
-
-                  controller: _tabController,
-                  tabs: myTabs,
-                  indicator: BoxDecoration(
-                      // shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(20), // Creates border
-                      color: Colors.white),
-                ),
-              ],
-            ),
+      body: Scaffold(
+        endDrawer: Container(width: 500, child: Drawer(
+          child: MyDrawer(
+            key: Key('Drawer'),
+            dagName: widget.dagName,
           ),
-          Expanded(
-            child: Scaffold(
-              // key: _scaffoldKey,
-              endDrawer: Drawer(
-                child: MyDrawer(
-                  key: Key('Drawer'),
-                  dagName: widget.dagName,
-                ),
+        )),
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              height: 70,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Text(
+                      widget.dagName,
+                      style: const TextStyle(fontSize: 25),
+                    ),
+                  ),
+                  TabBar(
+                    indicatorSize: TabBarIndicatorSize.label,
+                    labelPadding: const EdgeInsets.only(right: 10),
+                    // padding: EdgeInsets.symmetric(horizontal: 20),
+                    isScrollable: true,
+
+                    controller: _tabController,
+                    tabs: myTabs,
+                    indicator: BoxDecoration(
+                        // shape: BoxShape.rectangle,
+                        borderRadius:
+                            BorderRadius.circular(20), // Creates border
+                        color: Colors.white),
+                  ),
+                ],
               ),
-              body: TabBarView(
+            ),
+            Expanded(
+              child:
+                  // Scaffold(
+                  // key: _scaffoldKey,
+                  // endDrawer: Drawer(
+                  //   child: MyDrawer(
+                  //     key: Key('Drawer'),
+                  //     dagName: widget.dagName,
+                  //   ),
+                  // ),
+                  // body:
+                  TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 children: [
@@ -99,15 +111,16 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                     widget.dagName,
                     // _scaffoldKey,
                   ),
-                  GraphView(dagName: widget.dagName,
-                  //  scaffoldKey: _scaffoldKey
-                   )
-                   ,
+                  GraphView(
+                    dagName: widget.dagName,
+                    //  scaffoldKey: _scaffoldKey
+                  ),
                 ],
               ),
             ),
-          )
-        ],
+            // )
+          ],
+        ),
       ),
     );
   }

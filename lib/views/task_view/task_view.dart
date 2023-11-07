@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +15,7 @@ final fetchTasksProvider =
     Uri.parse('http://localhost:8000/default_tasks/$dagName'),
   );
 
-  return (jsonDecode(response.body) as List<dynamic>).cast<Map>();
+  return (await compute(jsonDecode, response.body) as List<dynamic>).cast<Map>();
 });
 
 final fetchRunsWithTasksProvider = FutureProvider.family
@@ -23,7 +24,7 @@ final fetchRunsWithTasksProvider = FutureProvider.family
     Uri.parse('http://localhost:8000/runs_with_tasks/$dagName'),
   );
 
-  return jsonDecode(response.body) as Map<String, dynamic>;
+  return await compute(jsonDecode, response.body) as Map<String, dynamic>;
 });
 
 class TaskView extends ConsumerStatefulWidget {
@@ -74,7 +75,8 @@ class TaskViewState extends ConsumerState<TaskView>
     return switch (provider) {
       AsyncData(:final value) => FadeTransition(
           opacity: _animation,
-          child: MultiplicationTable(
+          child: 
+          MultiplicationTable(
             tasks: value["tasks"],
             runs: value["runs"],
             dagName: widget.dagName,

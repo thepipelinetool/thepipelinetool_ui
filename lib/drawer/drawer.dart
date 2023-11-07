@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:thepipelinetool/views/task_view/table_cell.dart';
+  JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+  String prettyprint = encoder.convert(json);
 final selectedTaskProvider =
     StateNotifierProvider<SelectedTaskStateNotifier, SelectedTask>((ref) {
   return SelectedTaskStateNotifier();
@@ -12,10 +14,12 @@ final selectedTaskProvider =
 final fetchTaskProvider = FutureProvider.autoDispose
     .family<Map<String, dynamic>, String>((ref, dagName) async {
   final selectedTask = ref.watch(selectedTaskProvider);
+  final taskStatus = await ref.watch(fetchTaskStatusProvider(
+      (dagName, selectedTask.runId, int.parse(selectedTask.taskId), false)).future);
 
   var path = '/task/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
 
-  print(selectedTask.taskId);
+  // print(selectedTask.taskId);
   if (selectedTask.taskId == "default") {
     path = '/task/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
   }
@@ -24,16 +28,33 @@ final fetchTaskProvider = FutureProvider.autoDispose
 
   final map = jsonDecode(response.body) as Map<String, dynamic>;
 
-  // if (runId != "default" &&
-  //     map.any(
-  //         (m) => {"Pending", "Running", "Retrying"}.contains(m['status']))) {
+  path = '/task_result/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
+
+  // print(selectedTask.taskId);
+  if (selectedTask.taskId == "default") {
+    path = '/task_result/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
+  }
+
+  var map2 = {};
+
+  if (!{"Pending", "Running", "Retrying"}.contains(taskStatus['status'])) {
+    final response2 = await http.get(Uri.parse('http://localhost:8000$path'));
+
+    map2 = jsonDecode(response2.body) as Map<String, dynamic>;
+    map["results"] = map2;
+
+  }
+
+  // if (selectedTask.runId != "default" &&
+  //     {"Pending", "Running", "Retrying"}.contains(taskStatus['status'])) {
   //   Future.delayed(const Duration(seconds: 3), () {
   //     // print('refresh');
   //     ref.invalidateSelf();
   //   });
   // }
 
-  print(map);
+  // print(map);
+  map["status"] = taskStatus["status"];
 
   return map;
 });
@@ -88,15 +109,60 @@ class MyDrawerState extends ConsumerState<MyDrawer>
     final task = ref.watch(fetchTaskProvider(widget.dagName));
 
     return switch (task) {
-      AsyncData(:final value) =>
-        FadeTransition(
+      AsyncData(:final value) => FadeTransition(
+        // key: const Key('key'),
           opacity: _animation,
-          child:
-        () {
-          print(value);
-          return Text(value.toString());
-        }(),
-      ),
+          child: () {
+            return 
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(children: [
+                  Row(children: [
+                    Container(
+                        height: 50,
+                        child:
+                            Text("${value["function_name"]}_${value["id"]}")),
+  const Spacer(),
+                            Container(
+                        height: 50,
+                        child:
+                            Text("${value["status"]}")),
+                  ]),
+                  // Expanded(
+                  //     child:
+                  ExpansionPanelList.radio(children: [
+                    ExpansionPanelRadio(
+                        headerBuilder: (BuildContext context, bool isExpanded) {
+                          return const ListTile(
+                            title: Text('Args'),
+                          );
+                        },
+                        body: Column(children: [
+                          Container(
+                            child: Text(encoder.convert(value["template_args"])),
+                          )
+                        ]),
+                        value: 'Args'),
+                        if (value.containsKey("results")) ExpansionPanelRadio(
+                        headerBuilder: (BuildContext context, bool isExpanded) {
+                          return const ListTile(
+                            title: Text('Attempts'),
+                          );
+                        },
+                        body: Column(children: [
+                          Container(
+                            child: Text(encoder.convert(value["results"])),
+                          )
+                        ]),
+                        value: 'Attempts')
+                  ])
+                  // )
+                ]));
+
+            // print(value);
+            // return Text(value.toString());
+          }(),
+        ),
       // ),
       (_) => Container()
     };

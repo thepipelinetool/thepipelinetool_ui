@@ -5,6 +5,7 @@ import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'table_cell.dart';
 import 'constants.dart';
+import 'table_head.dart';
 
 class TableBody extends StatefulWidget {
   final String dagName;
@@ -12,11 +13,11 @@ class TableBody extends StatefulWidget {
   final Map<String, dynamic> runs;
   //final GlobalKey<ScaffoldState> scaffoldKey;
 
-  final ScrollController scrollController;
+  // final ScrollController scrollController;
 
   const TableBody({
     super.key,
-    required this.scrollController,
+    // required this.scrollController,
     required this.tasks,
     required this.runs,
     required this.dagName,
@@ -61,82 +62,116 @@ class TableBodyState extends State<TableBody> {
         //   },
         //   child:
         Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: firstCellWidth,
-          child: ListView(
-            controller: _firstColumnController,
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
-            ),
-            children: List.generate(widget.tasks.length, (index) {
-              return 
-              // Container(
-              //   padding: EdgeInsets.only(top: 2),
-              //   child: 
-              Container(
-                // color: Colors.green,
+        // Container(
+        // // constraints: BoxConstraints.tight(),
+        // // fit: BoxFit.contain,
+        // // alignment: Alignment.bottomLeft,
+        // width: firstCellWidth,
+        // child:
+        // ListView.builder(
+              Column(children: [Container(
                 height: cellHeight,
-                width: firstCellWidth,
-                child: FittedBox(
-        fit: BoxFit.fitHeight, 
-        child:Text(
-                    "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
-              ));
-            }),
+              ),
+        Expanded(child: SingleChildScrollView(
+          controller: _firstColumnController,
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
           ),
-        ),
+          // itemCount: widget.tasks.length,
+          // itemBuilder: (ctx, index) {
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...List.generate(
+                widget.tasks.length,
+                (index) {
+                  return Container(
+                    //   padding: EdgeInsets.only(top: 2),
+                    height: cellHeight,
+                    // width: firstCellWidth,
+                    child:
+                        // SizedBox.shrink(
+                        //   // color: Colors.green,
+                        //   height: cellHeight,
+                        // child:
+                        //   FittedBox(
+                        // fit: BoxFit.fitHeight,
+                        // child:
+                        Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                          "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
+                    ),
+                  );
+                },
+              )
+            ],
+            // ),
+            // })),
+          ),
+        )),]),
+        // ),
         Expanded(
-          child: SingleChildScrollView(
-            controller: widget.scrollController,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              width: (widget.runs.length) * cellHeight,
-              child: ListView(
-                controller: _restColumnsController,
-                physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics(),
-                ),
-                children: List.generate(widget.tasks.length, (y) {
-                  final runIds = widget.runs.keys.toList(growable: false);
+            child:
+                // SingleChildScrollView(
+                // controller: widget.scrollController,
+                // scrollDirection: Axis.horizontal,
+                //   physics: const BouncingScrollPhysics(),
+                //   child: SizedBox(
+                //     width: (widget.runs.length) * cellHeight,
+                //     child:
+                Column(children: [
+          TableHead(
+            // scrollController: _headController,
+            runs: widget.runs,
+            tasks: widget.tasks,
+          ),
+          Expanded(
+              child: ListView.builder(
+                  controller: _restColumnsController,
+                  physics: const AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics(),
+                  ),
+                  itemCount: widget.tasks.length,
+                  itemBuilder: (ctx, y) {
+                    // final runIds = widget.runs.keys.toList(growable: false);
 
-                  return Row(
-                    children: runIds.map((runId) {
-                      // final run = widget.runs[x];
-                      final task = widget.tasks[y];
-                      final key = '${task["function_name"]}_${task["id"]}';
-                      final containsFunction =
-                          widget.runs[runId].containsKey(key);
+                    return Row(
+                      children: widget.runs.keys.map((runId) {
+                        // final run = widget.runs[x];
+                        final task = widget.tasks[y];
+                        final key = '${task["function_name"]}_${task["id"]}';
+                        final containsFunction =
+                            widget.runs[runId].containsKey(key);
 
-                      // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
+                        // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
 
-                      if (containsFunction) {
+                        if (containsFunction) {
+                          return MultiplicationTableCell(
+                            dagName: widget.dagName,
+                            runId: runId,
+                            value: widget.runs[runId][key],
+                            // scaffoldKey: widget.scaffoldKey,
+                            // color: Colors.red,
+                          );
+                        }
+                        // print(widget.runs[runId]);
+                        // print(widget.tasks[y]);
+
                         return MultiplicationTableCell(
                           dagName: widget.dagName,
-                          runId: runId,
-                          value: widget.runs[runId][key],
+                          runId: '',
+                          value: const {},
                           // scaffoldKey: widget.scaffoldKey,
                           // color: Colors.red,
                         );
-                      }
-                      // print(widget.runs[runId]);
-                      // print(widget.tasks[y]);
-
-                      return MultiplicationTableCell(
-                        dagName: widget.dagName,
-                        runId: '',
-                        value: const {},
-                        // scaffoldKey: widget.scaffoldKey,
-                        // color: Colors.red,
-                      );
-                    }).toList(growable: false),
-                  );
-                }),
-              ),
-            ),
-          ),
-        ),
+                      }).toList(growable: false),
+                    );
+                  })),
+        ])),
       ],
       // ),
     );

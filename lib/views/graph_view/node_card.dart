@@ -23,7 +23,7 @@ class NodeCard extends ConsumerWidget {
     if (runId != "default") {
       // print((dagName.runtimeType, runId.runtimeType, info["id"].runtimeType));
       final taskStatus =
-          ref.watch(fetchTaskStatusProvider((dagName, runId, int.parse(info["id"]))));
+          ref.watch(fetchTaskStatusProvider((dagName, runId, int.parse(info["id"]), true)));
 
       switch (taskStatus) {
         case AsyncData(:final value):

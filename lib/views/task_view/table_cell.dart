@@ -10,10 +10,11 @@ const double cellHeight = 20;
 const double firstCellWidth = 100;
 
 final fetchTaskStatusProvider = FutureProvider.autoDispose
-    .family<Map<String, dynamic>, (String, String, int)>((ref, args) async {
+    .family<Map<String, dynamic>, (String, String, int, bool)>(
+        (ref, args) async {
   // final runId = ref.watch(selectedItemProvider(dagName));
 
-  final (dagName, runId, taskId) = args;
+  final (dagName, runId, taskId, refresh) = args;
 
   var path = '/task_status/$dagName/$runId/$taskId';
 
@@ -22,7 +23,7 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
   final map = jsonDecode(response.body) as Map<String, dynamic>;
   // print("map ${map}");
 
-  if (map['status'] == "Pending") {
+  if (refresh && {"Pending", "Running", "Retrying"}.contains(map['status'])) {
     Future.delayed(const Duration(seconds: 3), () {
       // print('refresh');
       ref.invalidateSelf();
@@ -81,7 +82,7 @@ class MultiplicationTableCell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taskStatus =
-        ref.watch(fetchTaskStatusProvider((dagName, runId, value["id"])));
+        ref.watch(fetchTaskStatusProvider((dagName, runId, value["id"], true)));
 
     var color = Colors.transparent;
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphite/graphite.dart';
@@ -47,8 +48,9 @@ final fetchGraphProvider = FutureProvider.autoDispose
   final response = await http.get(Uri.parse('http://localhost:8000$path'));
 
   final map =
-      (jsonDecode(response.body) as List<dynamic>).cast<Map<String, dynamic>>();
-
+      (await compute(jsonDecode, response.body) as List<dynamic>).cast<Map<String, dynamic>>();
+  print(runId);
+  print(runId != "default");
   if (runId != "default" &&
       map.any(
           (m) => {"Pending", "Running", "Retrying"}.contains(m['status']))) {
@@ -75,7 +77,7 @@ final fetchRunsProvider = FutureProvider.family
   );
 
 
-  return (jsonDecode(response.body) as List<dynamic>)
+  return (await compute(jsonDecode, response.body) as List<dynamic>)
       .cast<int>()
       .map((i) => i.toString())
       .toList().reversed.toList()
