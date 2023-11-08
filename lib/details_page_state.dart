@@ -13,21 +13,25 @@ import 'views/task_view/task_view.dart';
 
 const kMyToolbarHeight = 50.0;
 
-final List<Tab> myTabs = ['Tasks',
-'Graph'
-]
+final List<Tab> myTabs = ['Tasks', 'Graph']
     .map((e) => Tab(
             child: Container(
-          height: 40,
+          // height: 40,
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Align(
-              alignment: Alignment.center,
-              child: Text(
+          child: 
+          Center(
+          //     // alignment: Alignment.center,
+              child: 
+              Text(
                 e,
+                textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.black),
-              )),
+              )
+              ),
         )))
     .toList();
+
+    const kHorizontalPadding = 20.0;
 
 class DetailsPageState extends ConsumerState<DetailsPage>
     with SingleTickerProviderStateMixin {
@@ -54,17 +58,19 @@ class DetailsPageState extends ConsumerState<DetailsPage>
       backgroundColor: Colors.grey[200],
       appBar: AppBar(toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
       body: Scaffold(
-        endDrawer: Container(width: 500, child: Drawer(
-          child: MyDrawer(
-            key: Key('Drawer'),
-            dagName: widget.dagName,
-          ),
-        )),
-        body: Column(
+        endDrawer: Container(
+            width: 500,
+            child: Drawer(
+              child: MyDrawer(
+                key: Key('Drawer'),
+                dagName: widget.dagName,
+              ),
+            )),
+        body: Padding(padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),child: Column(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              height: 70,
+              height: 50,
               child: Row(
                 children: [
                   Padding(
@@ -75,20 +81,34 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                       style: const TextStyle(fontSize: 25),
                     ),
                   ),
-                  TabBar(
-                    indicatorSize: TabBarIndicatorSize.label,
-                    labelPadding: const EdgeInsets.only(right: 10),
+                  Container(height: 30, child: TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+                    // indicatorWeight: 0,
+                    dividerColor: Colors.transparent,
+                    // labelPadding: const EdgeInsets.only(right: 10),
                     // padding: EdgeInsets.symmetric(horizontal: 20),
                     isScrollable: true,
+                    padding: EdgeInsets.all(0),
+                    
 
                     controller: _tabController,
                     tabs: myTabs,
                     indicator: BoxDecoration(
-                        // shape: BoxShape.rectangle,
+                        // shape: BoxShape.circle,
+                      
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                         borderRadius:
                             BorderRadius.circular(20), // Creates border
                         color: Colors.white),
-                  ),
+                  ),)
                 ],
               ),
             ),
@@ -120,7 +140,7 @@ class DetailsPageState extends ConsumerState<DetailsPage>
             ),
             // )
           ],
-        ),
+        ),)
       ),
     );
   }

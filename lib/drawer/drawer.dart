@@ -155,7 +155,8 @@ class MyDrawerState extends ConsumerState<MyDrawer>
                           )
                         ]),
                         value: 'Attempts')
-                  ])
+                  ]),
+                  Text(encoder.convert(value))
                   // )
                 ]));
 

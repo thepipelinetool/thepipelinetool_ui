@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 
 import '../../drawer/drawer.dart';
 
-const double cellHeight = 20;
+const double outerCellHeight = 16;
+const double cellWidth =  10;
 const double firstCellWidth = 100;
 
 final fetchTaskStatusProvider = FutureProvider.autoDispose
@@ -93,9 +94,9 @@ class MultiplicationTableCell extends ConsumerWidget {
     }
 
     return Container(
-      width: cellHeight,
-      height: cellHeight,
-      // decoration: BoxDecoration(
+      width: outerCellHeight,
+      height: outerCellHeight,
+      decoration: BoxDecoration(
       //   // color:
       //   //     // value["status"] == "Pending"
       //   //     //     ? switch (taskStatus) {
@@ -108,15 +109,21 @@ class MultiplicationTableCell extends ConsumerWidget {
       //   //     //     : getStylingForGridStatus(value["status"]),
 
       //   //     Colors.red,
-      //   border: Border.all(
-      //     color: Colors.black12,
-      //     width: 1.0,
-      //   ),
+        // decoration: BoxDecoration(
+    border: Border(
+      top: BorderSide(width: 1.0, color: Colors.transparent),
+      bottom: BorderSide(width: 1.0, color: Colors.grey.withAlpha(80)),
+    ),
+  ),
       // ),
       alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: MouseRegion(
+      child: 
+      
+      // Padding(
+      //   padding: const EdgeInsets.all(2),
+        // child: 
+        Center(child:
+        MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
@@ -127,10 +134,18 @@ class MultiplicationTableCell extends ConsumerWidget {
                   SelectedTask(runId: runId, taskId: value["id"].toString()));
               // scaffoldKey.currentState!.openEndDrawer();
             },
-            child: Container(
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(2),
+            child: Tooltip(
+              message: 'I am a Tooltip',
+              preferBelow: false,
+              verticalOffset: outerCellHeight / 2,
+              showDuration: Duration.zero,
+              child: Container(
+                width: cellWidth,
+                height: cellWidth,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(1.5),
+                ),
               ),
             ),
           ),

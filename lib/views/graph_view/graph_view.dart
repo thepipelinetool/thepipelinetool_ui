@@ -47,8 +47,8 @@ final fetchGraphProvider = FutureProvider.autoDispose
 
   final response = await http.get(Uri.parse('http://localhost:8000$path'));
 
-  final map =
-      (await compute(jsonDecode, response.body) as List<dynamic>).cast<Map<String, dynamic>>();
+  final map = (await compute(jsonDecode, response.body) as List<dynamic>)
+      .cast<Map<String, dynamic>>();
   print(runId);
   print(runId != "default");
   if (runId != "default" &&
@@ -76,11 +76,12 @@ final fetchRunsProvider = FutureProvider.family
     Uri.parse('http://localhost:8000/runs/$dagName'),
   );
 
-
   return (await compute(jsonDecode, response.body) as List<dynamic>)
       .cast<int>()
       .map((i) => i.toString())
-      .toList().reversed.toList()
+      .toList()
+      .reversed
+      .toList()
     ..add('default');
 });
 
@@ -92,9 +93,20 @@ class GraphView extends ConsumerStatefulWidget {
 
   @override
   GraphViewState createState() => GraphViewState();
+
+
+static final p = Paint()
+  ..color = Colors.blueGrey
+  ..style = PaintingStyle.stroke
+  ..strokeCap = StrokeCap.round
+  ..strokeJoin = StrokeJoin.round
+  ..strokeWidth = 2;
+
 }
 
 class GraphViewState extends ConsumerState<GraphView>
+
+
     with TickerProviderStateMixin {
   @override
   void dispose() {
@@ -191,18 +203,11 @@ class GraphViewState extends ConsumerState<GraphView>
                         );
                       },
                       paintBuilder: (edge) {
-                        var p = Paint()
-                          ..color = Colors.blueGrey
-                          ..style = PaintingStyle.stroke
-                          ..strokeCap = StrokeCap.round
-                          ..strokeJoin = StrokeJoin.round
-                          ..strokeWidth = 2;
-                        return p;
+                        return GraphView.p;
                       },
                       onNodeTapUp: (_, node, __) {
-                        ref
-                            .read(selectedTaskProvider.notifier)
-                            .updateData(SelectedTask(runId: runId,taskId: node.id));
+                        ref.read(selectedTaskProvider.notifier).updateData(
+                            SelectedTask(runId: runId, taskId: node.id));
                         Scaffold.of(context).openEndDrawer();
                       },
                     ),

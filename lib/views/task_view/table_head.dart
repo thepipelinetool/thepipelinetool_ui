@@ -15,18 +15,18 @@ class TableHead extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: cellHeight ,child: ListView(
+    return SizedBox(height: outerCellHeight ,child: ListView(
       // controller: scrollController,
       physics: const ClampingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       children: List.generate(runs.length, (index) {
         return Container(
-          width: cellHeight,
-          height: cellHeight,
+          width: outerCellHeight,
+          height: outerCellHeight,
 
           alignment: Alignment.center,
           child: Padding(
-            padding: const EdgeInsets.all(4.5),
+            padding: const EdgeInsets.all(3.8),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -34,7 +34,12 @@ class TableHead extends StatelessWidget {
                   // print(runId);
                   // print(value);
                 },
-                child: Container(
+                child: Tooltip(
+              message: 'I am a Tooltip',
+              preferBelow: false,
+              verticalOffset: outerCellHeight / 2,
+              showDuration: Duration.zero,
+              child:Container(
                   decoration: BoxDecoration(
                     color: Colors.green, // TODO
                     borderRadius: BorderRadius.circular(50),
@@ -42,7 +47,7 @@ class TableHead extends StatelessWidget {
                     //   color: Colors.black12,
                     //   width: 1.0,
                     // ),
-                  ),
+                  ),),
                 ),
               ),
             ),

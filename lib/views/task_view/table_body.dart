@@ -71,48 +71,51 @@ class TableBodyState extends State<TableBody> {
         // width: firstCellWidth,
         // child:
         // ListView.builder(
-              Column(children: [Container(
-                height: cellHeight,
-              ),
-        Expanded(child: SingleChildScrollView(
-          controller: _firstColumnController,
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
+        Column(children: [
+          Container(
+            height: outerCellHeight,
           ),
-          // itemCount: widget.tasks.length,
-          // itemBuilder: (ctx, index) {
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...List.generate(
-                widget.tasks.length,
-                (index) {
-                  return Container(
-                    //   padding: EdgeInsets.only(top: 2),
-                    height: cellHeight,
-                    // width: firstCellWidth,
-                    child:
-                        // SizedBox.shrink(
-                        //   // color: Colors.green,
-                        //   height: cellHeight,
-                        // child:
-                        //   FittedBox(
-                        // fit: BoxFit.fitHeight,
-                        // child:
-                        Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
-                    ),
-                  );
-                },
-              )
-            ],
-            // ),
-            // })),
-          ),
-        )),]),
+          Expanded(
+              child: SingleChildScrollView(
+            controller: _firstColumnController,
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            // itemCount: widget.tasks.length,
+            // itemBuilder: (ctx, index) {
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...List.generate(
+                  widget.tasks.length,
+                  (index) {
+                    return Container(
+                      //   padding: EdgeInsets.only(top: 2),
+                      height: outerCellHeight,
+                      // width: firstCellWidth,
+                      child:
+                          // SizedBox.shrink(
+                          //   // color: Colors.green,
+                          //   height: cellHeight,
+                          // child:
+                          //   FittedBox(
+                          // fit: BoxFit.fitHeight,
+                          // child:
+                          Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
+                      ),
+                    );
+                  },
+                )
+              ],
+              // ),
+              // })),
+            ),
+          )),
+        ]),
         // ),
         Expanded(
             child:
@@ -161,13 +164,14 @@ class TableBodyState extends State<TableBody> {
                         // print(widget.runs[runId]);
                         // print(widget.tasks[y]);
 
-                        return MultiplicationTableCell(
-                          dagName: widget.dagName,
-                          runId: '',
-                          value: const {},
-                          // scaffoldKey: widget.scaffoldKey,
-                          // color: Colors.red,
-                        );
+                        // return MultiplicationTableCell(
+                        //   dagName: widget.dagName,
+                        //   runId: '',
+                        //   value: const {},
+                        //   // scaffoldKey: widget.scaffoldKey,
+                        //   // color: Colors.red,
+                        // );
+                        return Container(width: outerCellHeight, height: outerCellHeight);
                       }).toList(growable: false),
                     );
                   })),
