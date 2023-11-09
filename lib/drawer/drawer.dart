@@ -15,7 +15,7 @@ final fetchTaskProvider = FutureProvider.autoDispose
     .family<Map<String, dynamic>, String>((ref, dagName) async {
   final selectedTask = ref.watch(selectedTaskProvider);
   final taskStatus = await ref.watch(fetchTaskStatusProvider(
-      (dagName, selectedTask.runId, int.parse(selectedTask.taskId), false)).future);
+      (dagName, selectedTask.runId, int.parse(selectedTask.taskId), true)).future);
 
   var path = '/task/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
 
@@ -119,6 +119,7 @@ class MyDrawerState extends ConsumerState<MyDrawer>
                 child: Column(children: [
                   Row(children: [
                     Container(
+                      key: Key("${value["function_name"]}_${value["id"]}"),
                         height: 50,
                         child:
                             Text("${value["function_name"]}_${value["id"]}")),
@@ -165,7 +166,7 @@ class MyDrawerState extends ConsumerState<MyDrawer>
           }(),
         ),
       // ),
-      (_) => Container()
+      (_) => Container(color: Colors.red,)
     };
 
     // return Text(appState);

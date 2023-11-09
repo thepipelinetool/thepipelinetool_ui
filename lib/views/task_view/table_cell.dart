@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 import '../../drawer/drawer.dart';
 
 const double outerCellHeight = 16;
-const double cellWidth =  10;
+const double cellWidth = 10;
 const double firstCellWidth = 100;
 
 final fetchTaskStatusProvider = FutureProvider.autoDispose
@@ -25,9 +26,15 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
   // print("map ${map}");
 
   if (refresh && {"Pending", "Running", "Retrying"}.contains(map['status'])) {
-    Future.delayed(const Duration(seconds: 3), () {
-      // print('refresh');
-      ref.invalidateSelf();
+    Timer.periodic(const Duration(seconds: 3), (t) async {
+      final response2 = await http.get(Uri.parse('http://localhost:8000$path'));
+
+      final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
+      if (map2["status"] != map2["status"]) {
+        // print('refresh');
+        t.cancel();
+        ref.invalidateSelf();
+      }
     });
   }
 
@@ -57,11 +64,11 @@ extension HexColor on Color {
   }
 
   /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
-  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
-      '${alpha.toRadixString(16).padLeft(2, '0')}'
-      '${red.toRadixString(16).padLeft(2, '0')}'
-      '${green.toRadixString(16).padLeft(2, '0')}'
-      '${blue.toRadixString(16).padLeft(2, '0')}';
+  // String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+  //     '${alpha.toRadixString(16).padLeft(2, '0')}'
+  //     '${red.toRadixString(16).padLeft(2, '0')}'
+  //     '${green.toRadixString(16).padLeft(2, '0')}'
+  //     '${blue.toRadixString(16).padLeft(2, '0')}';
 }
 
 class MultiplicationTableCell extends ConsumerWidget {
@@ -97,41 +104,44 @@ class MultiplicationTableCell extends ConsumerWidget {
       width: outerCellHeight,
       height: outerCellHeight,
       decoration: BoxDecoration(
-      //   // color:
-      //   //     // value["status"] == "Pending"
-      //   //     //     ? switch (taskStatus) {
-      //   //     //         AsyncData(:final value) => (){
-      //   //     //           print(value);
-      //   //     //           return Colors.red;
-      //   //     //           return getStylingForGridStatus(value["status"]);}(),
-      //   //     //         (_) => Colors.transparent,
-      //   //     //       }
-      //   //     //     : getStylingForGridStatus(value["status"]),
+        //   // color:
+        //   //     // value["status"] == "Pending"
+        //   //     //     ? switch (taskStatus) {
+        //   //     //         AsyncData(:final value) => (){
+        //   //     //           print(value);
+        //   //     //           return Colors.red;
+        //   //     //           return getStylingForGridStatus(value["status"]);}(),
+        //   //     //         (_) => Colors.transparent,
+        //   //     //       }
+        //   //     //     : getStylingForGridStatus(value["status"]),
 
-      //   //     Colors.red,
+        //   //     Colors.red,
         // decoration: BoxDecoration(
-    border: Border(
-      top: BorderSide(width: 1.0, color: Colors.transparent),
-      bottom: BorderSide(width: 1.0, color: Colors.grey.withAlpha(80)),
-    ),
-  ),
+        border: Border(
+          top: BorderSide(width: 1.0, color: Colors.transparent),
+          bottom: BorderSide(width: 1.0, color: Colors.grey.withAlpha(80)),
+        ),
+      ),
       // ),
       alignment: Alignment.center,
-      child: 
-      
-      // Padding(
-      //   padding: const EdgeInsets.all(2),
-        // child: 
-        Center(child:
-        MouseRegion(
+      child:
+
+          // Padding(
+          //   padding: const EdgeInsets.all(2),
+          // child:
+          Center(
+        child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
               // print(runId);
               // print(value);
-              Scaffold.of(context).openEndDrawer();
               ref.read(selectedTaskProvider.notifier).updateData(
                   SelectedTask(runId: runId, taskId: value["id"].toString()));
+              // ref.invalidate(fetchTaskStatusProvider(
+              //     (dagName, runId, value["id"], false)));
+              Scaffold.of(context).openEndDrawer();
+
               // scaffoldKey.currentState!.openEndDrawer();
             },
             child: Tooltip(
