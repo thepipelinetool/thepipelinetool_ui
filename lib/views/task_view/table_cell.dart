@@ -30,10 +30,10 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
       final response2 = await http.get(Uri.parse('http://localhost:8000$path'));
 
       final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
-      if (map2["status"] != map2["status"]) {
+      if (map2["status"] != map["status"]) {
         // print('refresh');
-        t.cancel();
         ref.invalidateSelf();
+        t.cancel();
       }
     });
   }
