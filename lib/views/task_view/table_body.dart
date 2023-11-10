@@ -76,45 +76,50 @@ class TableBodyState extends State<TableBody> {
             height: outerCellHeight,
           ),
           Expanded(
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: SingleChildScrollView(
-            controller: _firstColumnController,
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
+                controller: _firstColumnController,
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                // itemCount: widget.tasks.length,
+                // itemBuilder: (ctx, index) {
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...List.generate(
+                      widget.tasks.length,
+                      (index) {
+                        return Container(
+                          //   padding: EdgeInsets.only(top: 2),
+                          height: outerCellHeight,
+                          // width: firstCellWidth,
+                          child:
+                              // SizedBox.shrink(
+                              //   // color: Colors.green,
+                              //   height: cellHeight,
+                              // child:
+                              //   FittedBox(
+                              // fit: BoxFit.fitHeight,
+                              // child:
+                              Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                                "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
+                          ),
+                        );
+                      },
+                    )
+                  ],
+                  // ),
+                  // })),
+                ),
+              ),
             ),
-            // itemCount: widget.tasks.length,
-            // itemBuilder: (ctx, index) {
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...List.generate(
-                  widget.tasks.length,
-                  (index) {
-                    return Container(
-                      //   padding: EdgeInsets.only(top: 2),
-                      height: outerCellHeight,
-                      // width: firstCellWidth,
-                      child:
-                          // SizedBox.shrink(
-                          //   // color: Colors.green,
-                          //   height: cellHeight,
-                          // child:
-                          //   FittedBox(
-                          // fit: BoxFit.fitHeight,
-                          // child:
-                          Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                            "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
-                      ),
-                    );
-                  },
-                )
-              ],
-              // ),
-              // })),
-            ),
-          )),
+          ),
         ]),
         // ),
         Expanded(
@@ -171,7 +176,8 @@ class TableBodyState extends State<TableBody> {
                         //   // scaffoldKey: widget.scaffoldKey,
                         //   // color: Colors.red,
                         // );
-                        return Container(width: outerCellHeight, height: outerCellHeight);
+                        return Container(
+                            width: outerCellHeight, height: outerCellHeight);
                       }).toList(growable: false),
                     );
                   })),
