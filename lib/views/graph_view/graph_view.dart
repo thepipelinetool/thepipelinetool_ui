@@ -46,6 +46,7 @@ final fetchGraphProvider = FutureProvider.autoDispose
   }
 
   final response = await http.get(Uri.parse('http://localhost:8000$path'));
+  ref.keepAlive();
 
   final map = (await compute(jsonDecode, response.body) as List<dynamic>)
       .cast<Map<String, dynamic>>();

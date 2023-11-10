@@ -21,6 +21,7 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
   var path = '/task_status/$dagName/$runId/$taskId';
 
   final response = await http.get(Uri.parse('http://localhost:8000$path'));
+  ref.keepAlive();
 
   final map = jsonDecode(response.body) as Map<String, dynamic>;
   // print("map ${map}");
