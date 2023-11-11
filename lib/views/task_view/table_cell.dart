@@ -33,8 +33,8 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
       final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
       if (map2["status"] != map["status"]) {
         // print('refresh');
-        ref.invalidateSelf();
         t.cancel();
+        ref.invalidateSelf();
       }
     });
   }
