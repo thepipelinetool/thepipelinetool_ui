@@ -6,21 +6,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import 'multiplication_table.dart';
+import 'table_cell.dart';
 
 final fetchTasksProvider =
     FutureProvider.autoDispose.family<List<Map>, String>((ref, dagName) async {
   // final path = '/default_tasks/$dagName';
+  final client = ref.watch(clientProvider);
 
-  final response = await http.get(
+  final response = await client.get(
     Uri.parse('http://localhost:8000/default_tasks/$dagName'),
   );
 
-  return (await compute(jsonDecode, response.body) as List<dynamic>).cast<Map>();
+  return (await compute(jsonDecode, response.body) as List<dynamic>)
+      .cast<Map>();
 });
 
 final fetchRunsWithTasksProvider = FutureProvider.family
     .autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
-  final response = await http.get(
+  final client = ref.watch(clientProvider);
+
+  final response = await client.get(
     Uri.parse('http://localhost:8000/runs_with_tasks/$dagName'),
   );
 
@@ -33,8 +38,9 @@ class TaskView extends ConsumerStatefulWidget {
   //final GlobalKey<ScaffoldState> scaffoldKey;
 
   const TaskView(this.dagName,
-  //  this.scaffoldKey, 
-  {Key? key}) : super(key: key);
+      //  this.scaffoldKey,
+      {Key? key})
+      : super(key: key);
   @override
   TaskViewState createState() => TaskViewState();
 }
@@ -75,8 +81,7 @@ class TaskViewState extends ConsumerState<TaskView>
     return switch (provider) {
       AsyncData(:final value) => FadeTransition(
           opacity: _animation,
-          child: 
-          MultiplicationTable(
+          child: MultiplicationTable(
             tasks: value["tasks"],
             runs: value["runs"],
             dagName: widget.dagName,

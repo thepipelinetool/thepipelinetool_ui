@@ -8,6 +8,7 @@ import 'package:graphite/graphite.dart';
 import 'package:http/http.dart' as http;
 
 import '../../drawer/drawer.dart';
+import '../task_view/table_cell.dart';
 import 'node_card.dart';
 // import '../main.dart';
 
@@ -44,8 +45,11 @@ final fetchGraphProvider = FutureProvider.autoDispose
   if (runId == "default") {
     path = '/default_graph/$dagName';
   }
+  final client = ref.watch(clientProvider);
 
-  final response = await http.get(Uri.parse('http://localhost:8000$path'));
+  // final client = http.Client();
+  // ref.onDispose(client.close);
+  final response = await client.get(Uri.parse('http://localhost:8000$path'));
   ref.keepAlive();
 
   final map = (await compute(jsonDecode, response.body) as List<dynamic>)
@@ -73,7 +77,9 @@ final fetchGraphProvider = FutureProvider.autoDispose
 
 final fetchRunsProvider = FutureProvider.family
     .autoDispose<List<String>, String>((ref, dagName) async {
-  final response = await http.get(
+        final client = ref.watch(clientProvider);
+
+  final response = await client.get(
     Uri.parse('http://localhost:8000/runs/$dagName'),
   );
 

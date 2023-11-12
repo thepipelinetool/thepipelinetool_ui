@@ -1,37 +1,61 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:thepipelinetool/views/task_view/constants.dart';
+import 'package:retry/retry.dart';
 
 import '../../drawer/drawer.dart';
+
+import 'constants.dart';
 
 const double outerCellHeight = 16;
 const double cellWidth = 10;
 const double firstCellWidth = 100;
 
+final clientProvider = StateProvider.autoDispose<http.Client>((ref) {
+  final client = http.Client();
+
+  ref.onDispose(client.close);
+
+  return client;
+});
+
 final fetchTaskStatusProvider = FutureProvider.autoDispose
-    .family<Map<String, dynamic>, (String, String, int, bool)>(
-        (ref, args) async {
+    .family<TaskStatus, (String, String, int, bool)>((ref, args) async {
   // final runId = ref.watch(selectedItemProvider(dagName));
 
   final (dagName, runId, taskId, refresh) = args;
 
   var path = '/task_status/$dagName/$runId/$taskId';
+  // final client = http.Client();
+  // ref.onDispose(client.close);
+  final client = ref.watch(clientProvider);
 
-  final response = await http.get(Uri.parse('http://localhost:8000$path'));
+  final response = await retry(
+    // Make a GET request
+    () async => await client.get(Uri.parse('http://localhost:8000$path')),
+    // Retry on SocketException or TimeoutException
+    retryIf: (e) => e is SocketException || e is TimeoutException,
+  );
+  // final response = ;
   ref.keepAlive();
+  final map = response.bodyBytes.first.toTaskStatus();
+  // print('MAP $map');
 
-  final map = jsonDecode(response.body) as Map<String, dynamic>;
+  // final map = jsonDecode(response.) as Map<String, dynamic>;
   // print("map ${map}");
 
-  if (refresh && {"Pending", "Running", "Retrying"}.contains(map['status'])) {
+  if (refresh &&
+      {TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying}
+          .contains(map)) {
     Timer.periodic(const Duration(seconds: 3), (t) async {
-      final response2 = await http.get(Uri.parse('http://localhost:8000$path'));
-
-      final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
-      if (map2["status"] != map["status"]) {
+      final response2 = await client.get(Uri.parse('http://localhost:8000$path'));
+      final map2 = response2.bodyBytes.first.toTaskStatus();
+      // final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
+      if (map2 != map) {
         // print('refresh');
         t.cancel();
         ref.invalidateSelf();
@@ -43,15 +67,15 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
   // return {"status": "Pending"};
 });
 
-Color getStylingForGridStatus(String taskStatus) {
+Color getStylingForGridStatus(TaskStatus taskStatus) {
   return switch (taskStatus) {
-    "Pending" => Colors.grey,
-    "Success" => Colors.green,
-    "Failure" => Colors.red,
-    "Running" => HexColor.fromHex("#90EE90"),
-    "Retrying" => Colors.orange,
-    "Skipped" => Colors.pink,
-    (_) => Colors.transparent,
+    TaskStatus.Pending => Colors.grey,
+    TaskStatus.Success => Colors.green,
+    TaskStatus.Failure => Colors.red,
+    TaskStatus.Running => HexColor.fromHex("#90EE90"),
+    TaskStatus.Retrying => Colors.orange,
+    TaskStatus.Skipped => Colors.pink,
+    // (_) => Colors.transparent,
   };
 }
 
@@ -97,7 +121,10 @@ class MultiplicationTableCell extends ConsumerWidget {
 
     switch (taskStatus) {
       case AsyncData(:final value):
-        color = getStylingForGridStatus(value["status"]);
+        color = getStylingForGridStatus(value);
+      case AsyncError():
+        ref.invalidate(
+            fetchTaskStatusProvider((dagName, runId, value["id"], true)));
       // return getStylingForGridStatus(value["status"]);
     }
 

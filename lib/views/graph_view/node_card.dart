@@ -27,7 +27,7 @@ class NodeCard extends ConsumerWidget {
 
       switch (taskStatus) {
         case AsyncData(:final value):
-          color = getStylingForGridStatus(value["status"]);
+          color = getStylingForGridStatus(value);
         // return getStylingForGridStatus(value["status"]);
       }
     }

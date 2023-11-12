@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:thepipelinetool/deserialize/dag_options.dart';
+
+import 'views/task_view/table_cell.dart';
 // import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // part 'provider.g.dart';
@@ -41,10 +43,12 @@ import 'package:thepipelinetool/deserialize/dag_options.dart';
 
 
 
-final fetchDagsOptionsProvider = FutureProvider<List<DagOptions>>((ref) async {
+final fetchDagsOptionsProvider = FutureProvider.autoDispose<List<DagOptions>>((ref) async {
   // final json = await http.get('api/user/$userId');
   // return User.fromJson(json);
-  final response = await http.get(
+    final client = ref.watch(clientProvider);
+
+  final response = await client.get(
     Uri.parse('http://localhost:8000/dags'),
       // No need to manually encode the query parameters, the "Uri" class does it for us.
       // queryParameters: {'type': activityType},
