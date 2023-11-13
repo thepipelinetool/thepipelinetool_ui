@@ -83,6 +83,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         //   Scrollbar(
         // child: 
         PaginatedDataTable2(
+          wrapInCard: false,
           // controller: _scrollController,
           sortColumnIndex: sortColumn,
           sortAscending: ascending,

@@ -94,17 +94,18 @@ class DetailsPageState extends ConsumerState<DetailsPage>
 
                     controller: _tabController,
                     tabs: myTabs,
-                    indicator: BoxDecoration(
+                    indicator: 
+                    BoxDecoration(
                         // shape: BoxShape.circle,
-                      
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
+                        border: Border.all(color: Colors.grey),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.grey.withOpacity(0.5),
+                        //     spreadRadius: 5,
+                        //     blurRadius: 7,
+                        //     offset: Offset(0, 3), // changes position of shadow
+                        //   ),
+                        // ],
                         borderRadius:
                             BorderRadius.circular(20), // Creates border
                         color: Colors.white),

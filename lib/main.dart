@@ -67,9 +67,12 @@ class MyApp extends StatelessWidget {
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-            // primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        // primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
     );
   }
 }

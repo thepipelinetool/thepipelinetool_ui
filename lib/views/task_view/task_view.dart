@@ -9,7 +9,7 @@ import 'multiplication_table.dart';
 import 'table_cell.dart';
 
 final fetchTasksProvider =
-    FutureProvider.autoDispose.family<List<Map>, String>((ref, dagName) async {
+    FutureProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, dagName) async {
   // final path = '/default_tasks/$dagName';
   final client = ref.watch(clientProvider);
 
@@ -18,7 +18,7 @@ final fetchTasksProvider =
   );
 
   return (await compute(jsonDecode, response.body) as List<dynamic>)
-      .cast<Map>();
+      .cast<Map<String, dynamic>>();
 });
 
 final fetchRunsWithTasksProvider = FutureProvider.family

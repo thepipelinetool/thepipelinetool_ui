@@ -6,7 +6,7 @@ import 'table_body.dart';
 
 class MultiplicationTable extends StatefulWidget {
   final String dagName;
-  final List<Map<dynamic, dynamic>> tasks;
+  final List<Map<String, dynamic>> tasks;
   final Map<String, dynamic> runs;
   //final GlobalKey<ScaffoldState> scaffoldKey;
 
