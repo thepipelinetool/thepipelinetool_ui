@@ -39,7 +39,7 @@ final fetchGraphProvider = FutureProvider.autoDispose
     .family<(List<Map<String, dynamic>>, String), String>((ref, dagName) async {
   final runId = ref.watch(selectedItemProvider(dagName));
 
-  var path = '/graph/$dagName/$runId';
+  var path = '/graph/$runId';
 
   if (runId == "default") {
     path = '/default_graph/$dagName';

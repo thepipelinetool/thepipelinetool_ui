@@ -29,7 +29,7 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
 
   final (dagName, runId, taskId, refresh) = args;
 
-  var path = '/task_status/$dagName/$runId/$taskId';
+  var path = '/task_status/$runId/$taskId';
   // final client = http.Client();
   // ref.onDispose(client.close);
   final client = ref.watch(clientProvider);
@@ -270,7 +270,7 @@ final fetchTooltip = FutureProvider.autoDispose<String>((ref) async {
   final response2 = await retry(
     // Make a GET request
     () async => await client.get(Uri.parse(
-        'http://localhost:8000/task_status/${hovered.$1}/${hovered.$2}/${hovered.$3}')),
+        'http://localhost:8000/task_status/${hovered.$2}/${hovered.$3}')),
     // Retry on SocketException or TimeoutException
     retryIf: (e) => e is SocketException || e is TimeoutException,
   );
@@ -286,7 +286,8 @@ final fetchTooltip = FutureProvider.autoDispose<String>((ref) async {
       .contains(map)) {
     final response3 = await client.get(
       Uri.parse(
-          'http://localhost:8000/task_result/${hovered.$1}/${hovered.$2}/${hovered.$3}'),
+        // TODO use task result info? we dont use the actual result here, only info
+          'http://localhost:8000/task_result/${hovered.$2}/${hovered.$3}'),
       // No need to manually encode the query parameters, the "Uri" class does it for us.
       // queryParameters: {'type': activityType},
     );

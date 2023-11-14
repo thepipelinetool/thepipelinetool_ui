@@ -18,7 +18,7 @@ final fetchTaskProvider =
   final selectedTask = ref.watch(selectedTaskProvider)!;
 
   var path =
-      '/task/${selectedTask.dagName}/${selectedTask.runId}/${selectedTask.taskId}';
+      '/task/${selectedTask.runId}/${selectedTask.taskId}';
 
   // print(selectedTask.taskId);
   if (selectedTask.runId == "default") {
@@ -31,7 +31,7 @@ final fetchTaskProvider =
   final map = jsonDecode(response.body) as Map<String, dynamic>;
 
   path =
-      '/task_result/${selectedTask.dagName}/${selectedTask.runId}/${selectedTask.taskId}';
+      '/task_result/${selectedTask.runId}/${selectedTask.taskId}';
   var map2 = {};
 
   TaskStatus taskStatus;
