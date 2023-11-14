@@ -59,7 +59,7 @@ enum Columns {
 
 class HomeScreenState extends ConsumerState<HomeScreen> {
   HomeScreenState();
-    @override
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -74,14 +74,33 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final dagProvider = ref.watch(fetchDagsOptionsProvider);
 
+    // return Container();
+
+    final data = {
+      "name": "Aleix Melon",
+      "id": "E00245",
+      "role": ["Dev", "DBA"],
+      "age": 23,
+      "doj": "11-12-2019",
+      "married": false,
+      "address": {
+        "street": "32, Laham St.",
+        "city": "Innsbruck",
+        "country": "Austria"
+      },
+      "referred-by": "E0012"
+    };
+
     return Scaffold(
-      appBar: AppBar(scrolledUnderElevation: 0,toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
+      appBar: AppBar(
+          scrolledUnderElevation: 0,
+          toolbarHeight: kMyToolbarHeight,
+          title: const MyAppBar()),
       // backgroundColor: Colors.red,
-      body:
-          // SingleChildScrollView(
-          //     child:
+      body: 
+
         //   Scrollbar(
-        // child: 
+        // child:
         PaginatedDataTable2(
           wrapInCard: false,
           // controller: _scrollController,

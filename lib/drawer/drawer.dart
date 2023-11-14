@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:thepipelinetool/details_page_state.dart';
 import 'package:thepipelinetool/views/task_view/constants.dart';
 import 'package:thepipelinetool/views/task_view/table_cell.dart';
 
@@ -49,7 +50,15 @@ final fetchTaskProvider =
           await client.get(Uri.parse('http://localhost:8000$path'));
 
       map2 = jsonDecode(response2.body) as Map<String, dynamic>;
+      // map2["template_args"] = jsonDecode(map2["template_args_str"]);
+      map2["resolved_args"] = jsonDecode(map2["resolved_args_str"]);
+
+      map2.remove("resolved_args_str");
+      map2.remove("template_args_str");
+
       map["results"] = map2;
+
+
       // print(map2);
     }
   } else {
@@ -126,6 +135,8 @@ class MyDrawerState extends ConsumerState<MyDrawer>
           child: () {
             final status = value.$2;
             final v = value.$1;
+            print('');
+            print(v);
             return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(children: [
@@ -137,38 +148,56 @@ class MyDrawerState extends ConsumerState<MyDrawer>
                     const Spacer(),
                     Container(height: 50, child: Text(status.toString())),
                   ]),
-                  // Expanded(
-                  //     child:
-                  ExpansionPanelList.radio(children: [
+                  Expanded(
+                      child:
+                  SingleChildScrollView(child: ExpansionPanelList.radio(
+                    // materialGapSize: 0,
+                    // dividerColor: Colors.transparent,
+                    elevation: 0,
+                    children: [
                     ExpansionPanelRadio(
+                      // backgroundColor: Colors.transparent,
+                      canTapOnHeader: true,
                         headerBuilder: (BuildContext context, bool isExpanded) {
-                          return const ListTile(
+                          return ListTile(
+                            // tileColor: Theme.of(context).primaryColor,
+                            
+                            // style: ListTileStyle.list,
                             title: Text('Args'),
                           );
                         },
-                        body: Column(children: [
-                          Container(
+                        // body: v["template_args"] == null ? Container() : Container(width: 400, child: jsonView(v["template_args"], false)),
+                                                  body: 
+                          Align(alignment: Alignment.topLeft, child: Container(
+                                                          padding: EdgeInsets.only(left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
                             child: Text(encoder.convert(v["template_args"])),
-                          )
-                        ]),
+                          )),
+                        
+                        
                         value: 'Args'),
                     if (v.containsKey("results"))
                       ExpansionPanelRadio(
+                                              // backgroundColor: Colors.transparent,
+
+                                              canTapOnHeader: true,
+
                           headerBuilder:
                               (BuildContext context, bool isExpanded) {
                             return const ListTile(
                               title: Text('Attempts'),
                             );
                           },
-                          body: Column(children: [
-                            Container(
+                          body: 
+                            Align(alignment: Alignment.topLeft, child: Container(
+                                                          padding: EdgeInsets.only(left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
+
                               child: Text(encoder.convert(v["results"])),
-                            )
-                          ]),
+                            ))
+                          ,
                           value: 'Attempts')
                   ]),
-                  Text(encoder.convert(v))
-                  // )
+                  // Text(encoder.convert(v))
+                  ))
                 ]));
 
             // print(value);
@@ -177,7 +206,7 @@ class MyDrawerState extends ConsumerState<MyDrawer>
         ),
       // ),
       (_) => Container(
-          color: Colors.red,
+          // color: Colors.red,
         )
     };
 
@@ -185,3 +214,56 @@ class MyDrawerState extends ConsumerState<MyDrawer>
     // return Text("test");
   }
 }
+
+
+  Widget jsonView(Object o, bool inner) {
+    var items = <Widget>[];
+    if (o is List) {
+      items = o.map((e) => Text(e.toString())).toList();
+      print(1);
+    } else if (o is Map) {
+      items = [
+        Container(
+            // decoration: BoxDecoration(
+            //     // border: Border.all()
+            //     ),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(),
+                                    left: BorderSide(),
+                                    bottom: BorderSide(),
+                                    right: inner ? BorderSide.none : BorderSide()
+                                  ),
+                                ),
+            child: Table(
+                children:
+                    // TableRow(children: o.keys.map((e) => Text(e.toString())).toList()),
+                    // TableRow(children: o.values.map((e) => jsonView(e)).toList())
+                    o.entries
+                        .map((e) => TableRow(
+                                children: [
+                                  Text("${e.key}:"),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: jsonView(e.value, true))
+                                ]))
+                        .toList()))
+      ];
+      print(2);
+    } else {
+      items = [Text(o.toString())];
+      print(3);
+    }
+    print(items);
+
+    // return ListView.builder(
+    //   itemCount: items.length,
+    //   itemBuilder: (ctx, index) {
+    //     return items[index];
+    //   });
+    return Wrap(
+        // color: Colors.blue,
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: items)
+        ]);
+  }
