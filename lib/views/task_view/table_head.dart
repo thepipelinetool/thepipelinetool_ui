@@ -37,7 +37,7 @@ class TableHead extends StatelessWidget {
                 child: Tooltip(
               message: 'I am a Tooltip',
               preferBelow: false,
-              verticalOffset: outerCellHeight / 2,
+              verticalOffset: outerCellHeight,
               showDuration: Duration.zero,
               child:Container(
                   decoration: BoxDecoration(

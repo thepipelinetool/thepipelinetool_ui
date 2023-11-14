@@ -22,8 +22,8 @@ class DagLink extends ConsumerWidget {
           },
           child: Text(
             dagOptions.dagName,
-            style: const TextStyle(
-                decoration: TextDecoration.underline), // optional
+            // style: const TextStyle(
+            //     decoration: TextDecoration.underline), // optional
           ),
         ),
       );

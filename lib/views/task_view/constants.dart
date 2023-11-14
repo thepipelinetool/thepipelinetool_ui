@@ -6,7 +6,8 @@ enum TaskStatus {
   Retrying,
   Success,
   Failure,
-  Skipped;
+  Skipped,
+  None;
 
   // Static method to get enum from int
   static TaskStatus fromInt(int index) {
@@ -31,6 +32,8 @@ enum TaskStatus {
         return "Failure";
       case TaskStatus.Skipped:
         return "Skipped";
+      case TaskStatus.None:
+        return '';
     }
   }
 }

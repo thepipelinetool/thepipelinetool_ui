@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thepipelinetool/appbar.dart';
 import 'package:thepipelinetool/details_page.dart';
 
 import 'homescreen.dart';
@@ -57,21 +58,53 @@ final GoRouter _router = GoRouter(
 );
 
 /// The main app.
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   /// Constructs a [MyApp]
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkTheme = ref.watch(darkmodeProvider);
+
     return MaterialApp.router(
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        applyElevationOverlayColor: false,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
         // primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+
+        primarySwatch: Colors.red,
+        primaryColor: isDarkTheme ? Colors.black : Colors.white,
+
+        // backgroundColor: isDarkTheme ? Colors.black : Color(0xffF1F5FB),
+
+        // indicatorColor: isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
+        indicatorColor: Colors.transparent,
+        hintColor: Colors.transparent,
+        // buttonColor: isDarkTheme ? Color(0xff3B3B3B) : Color(0xffF1F5FB),
+
+        // hintColor: isDarkTheme ? const Color(0xff280C0B) : const Color(0xffEECED3),
+
+        // highlightColor: isDarkTheme ? Color(0xff372901) : Color(0xffFCE192),
+        // hoverColor: isDarkTheme ? Color(0xff3A3A3B) : Color(0xff4285F4),
+
+        // focusColor: isDarkTheme ? const Color(0xff0B2512) : const Color(0xffA8DAB5),
+        focusColor: Colors.transparent,
+        disabledColor: Colors.grey,
+        // textSelectionColor: isDarkTheme ? Colors.white : Colors.black,
+        cardColor: isDarkTheme ? const Color(0xFF151515) : Colors.white,
+        canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
+        brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+        buttonTheme: Theme.of(context).buttonTheme.copyWith(
+            colorScheme:
+                isDarkTheme ? const ColorScheme.dark() : const ColorScheme.light()),
+        appBarTheme: const AppBarTheme(
+          elevation: 0.0,
+        ),
       ),
     );
   }

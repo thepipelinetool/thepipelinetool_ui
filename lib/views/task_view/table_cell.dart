@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'package:retry/retry.dart';
 
 import '../../drawer/drawer.dart';
 
-import 'constants.dart';
 
 const double outerCellHeight = 16;
 const double cellWidth = 10;
@@ -24,7 +24,7 @@ final clientProvider = StateProvider.autoDispose<http.Client>((ref) {
 });
 
 final fetchTaskStatusProvider = FutureProvider.autoDispose
-    .family<TaskStatus, (String, String, int, bool)>((ref, args) async {
+    .family<TaskStatus, (String?, String?, int?, bool)>((ref, args) async {
   // final runId = ref.watch(selectedItemProvider(dagName));
 
   final (dagName, runId, taskId, refresh) = args;
@@ -52,7 +52,8 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
       {TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying}
           .contains(map)) {
     Timer.periodic(const Duration(seconds: 3), (t) async {
-      final response2 = await client.get(Uri.parse('http://localhost:8000$path'));
+      final response2 =
+          await client.get(Uri.parse('http://localhost:8000$path'));
       final map2 = response2.bodyBytes.first.toTaskStatus();
       // final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
       if (map2 != map) {
@@ -75,6 +76,7 @@ Color getStylingForGridStatus(TaskStatus taskStatus) {
     TaskStatus.Running => HexColor.fromHex("#90EE90"),
     TaskStatus.Retrying => Colors.orange,
     TaskStatus.Skipped => Colors.pink,
+    TaskStatus.None => Colors.transparent,
     // (_) => Colors.transparent,
   };
 }
@@ -117,6 +119,11 @@ class MultiplicationTableCell extends ConsumerWidget {
     final taskStatus =
         ref.watch(fetchTaskStatusProvider((dagName, runId, value["id"], true)));
 
+    final tooltip = ref.watch(fetchTooltip);
+
+    // final vals = <String>[];
+    var vals = '';
+
     var color = Colors.transparent;
 
     switch (taskStatus) {
@@ -127,6 +134,18 @@ class MultiplicationTableCell extends ConsumerWidget {
             fetchTaskStatusProvider((dagName, runId, value["id"], true)));
       // return getStylingForGridStatus(value["status"]);
     }
+
+        switch (tooltip) {
+      case AsyncData(:final value):
+        vals += value;
+      // case AsyncError():
+      //   ref.invalidate(fetchTooltip);
+
+        // ref.invalidate(
+        //     fetchTaskStatusProvider((dagName, runId, value["id"], true)));
+      // return getStylingForGridStatus(value["status"]);
+    }
+
 
     return Container(
       width: outerCellHeight,
@@ -146,7 +165,7 @@ class MultiplicationTableCell extends ConsumerWidget {
         //   //     Colors.red,
         // decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(width: 1.0, color: Colors.transparent),
+          top: BorderSide(width: .0, color: Colors.transparent),
           bottom: BorderSide(width: 1.0, color: Colors.grey.withAlpha(80)),
         ),
       ),
@@ -159,23 +178,58 @@ class MultiplicationTableCell extends ConsumerWidget {
           // child:
           Center(
         child: MouseRegion(
+          onEnter: (_) {
+
+                // print(1);
+                ref.read(hoveredTooltipProvider.notifier).change((dagName, runId, value["id"].toString()));
+          },
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: () {
               // print(runId);
               // print(value);
-              ref.read(selectedTaskProvider.notifier).updateData(
-                  SelectedTask(runId: runId, taskId: value["id"].toString()));
+              ref.read(selectedTaskProvider.notifier).updateData(SelectedTask(
+                  runId: runId,
+                  taskId: value["id"].toString(),
+                  dagName: dagName));
               // ref.invalidate(fetchTaskStatusProvider(
               //     (dagName, runId, value["id"], false)));
               Scaffold.of(context).openEndDrawer();
 
               // scaffoldKey.currentState!.openEndDrawer();
             },
-            child: Tooltip(
-              message: 'I am a Tooltip',
+            child: 
+            vals.isEmpty ? Container(
+                width: cellWidth,
+                height: cellWidth,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(1.5),
+                ),
+              ) :
+            Tooltip(
+              // height: vals.isEmpty ? 0 : null,
+              // message: 'I am a Tooltip',
+              richMessage: TextSpan(
+                // text: 'I am a rich tooltip. ',
+                // text: '${value["function_name"]}_${value["id"]}\n$vals',
+                // style: TextStyle(color: Colors.red),
+                children: <InlineSpan>[
+                   TextSpan(
+                    text: "${value["function_name"]}_${value["id"]}\n",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: "${vals}",
+                    // style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              
+              ),
+              // onTriggered: () {
+              // },
               preferBelow: false,
-              verticalOffset: outerCellHeight / 2,
+              verticalOffset: outerCellHeight,
               showDuration: Duration.zero,
               child: Container(
                 width: cellWidth,
@@ -195,4 +249,67 @@ class MultiplicationTableCell extends ConsumerWidget {
       ),
     );
   }
+}
+
+final fetchTooltip = FutureProvider.autoDispose<String>((ref) async {
+  // final json = await http.get('api/user/$userId');
+  // return User.fromJson(json);
+  final client = ref.watch(clientProvider);
+  final hovered = ref.watch(hoveredTooltipProvider);
+
+  if (hovered == null) {
+    return '';
+  }
+
+  // final response = await client.get(
+  //   Uri.parse(
+  //       'http://localhost:8000/task/${hovered.$1}/${hovered.$2}/${hovered.$3}'),
+  //   // No need to manually encode the query parameters, the "Uri" class does it for us.
+  //   // queryParameters: {'type': activityType},
+  // );
+  final response2 = await retry(
+    // Make a GET request
+    () async => await client.get(Uri.parse(
+        'http://localhost:8000/task_status/${hovered.$1}/${hovered.$2}/${hovered.$3}')),
+    // Retry on SocketException or TimeoutException
+    retryIf: (e) => e is SocketException || e is TimeoutException,
+  );
+  // final response = ;
+  ref.keepAlive();
+  final map = response2.bodyBytes.first.toTaskStatus();
+
+  var res = '';
+
+  res += 'Status: ${map.toString()}\n';
+
+  if (!{TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying}
+      .contains(map)) {
+    final response3 = await client.get(
+      Uri.parse(
+          'http://localhost:8000/task_result/${hovered.$1}/${hovered.$2}/${hovered.$3}'),
+      // No need to manually encode the query parameters, the "Uri" class does it for us.
+      // queryParameters: {'type': activityType},
+    );
+    final result  = jsonDecode(response3.body);
+//     {attempt: 1, elapsed: 0, ended: 2023-11-13T01:42:17.206218+00:00, function_name: hi, is_branch: false, max_attempts: 1, premature_failure: false,
+// premature_failure_error_str: , resolved_args_str: 0, result: {hello: world}, started: 2023-11-13T01:42:17.203640+00:00, stderr: , stdout: 0
+// , success: true, task_id: 0, template_args_str: 0}
+    res += 'Started: ${result["started"]}\n';
+    res += 'Ended: ${result["ended"]}\n';
+    res += 'Elapsed: ${result["elapsed"]}\n';
+    res += 'Success: ${result["success"]}';
+  }
+
+  return res;
+});
+
+final hoveredTooltipProvider =
+    StateNotifierProvider<HoveredTooltip, (String, String, String)?>((ref) {
+  return HoveredTooltip();
+});
+
+class HoveredTooltip extends StateNotifier<(String, String, String)?> {
+  HoveredTooltip() : super(null);
+
+  void change((String, String, String) text) => state = text;
 }

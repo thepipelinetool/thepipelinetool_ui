@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphite/graphite.dart';
-import 'package:http/http.dart' as http;
 
 import '../../drawer/drawer.dart';
 import '../task_view/table_cell.dart';
@@ -54,8 +53,8 @@ final fetchGraphProvider = FutureProvider.autoDispose
 
   final map = (await compute(jsonDecode, response.body) as List<dynamic>)
       .cast<Map<String, dynamic>>();
-  print(runId);
-  print(runId != "default");
+  // print(runId);
+  // print(runId != "default");
   if (runId != "default" &&
       map.any(
           (m) => {"Pending", "Running", "Retrying"}.contains(m['status']))) {
@@ -203,10 +202,8 @@ class GraphViewState extends ConsumerState<GraphView>
                         // print("${edge.from.id}->${edge.to.id}");
                       },
                       nodeBuilder: (ctx, node) {
-                        return MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: NodeCard(
-                              dagName: widget.dagName, info: map[node.id]),
+                        return NodeCard(
+                              dagName: widget.dagName, info: map[node.id]
                         );
                       },
                       paintBuilder: (edge) {
@@ -214,7 +211,7 @@ class GraphViewState extends ConsumerState<GraphView>
                       },
                       onNodeTapUp: (_, node, __) {
                         ref.read(selectedTaskProvider.notifier).updateData(
-                            SelectedTask(runId: runId, taskId: node.id));
+                            SelectedTask(runId: runId, taskId: node.id, dagName: widget.dagName));
                         Scaffold.of(context).openEndDrawer();
                       },
                     ),

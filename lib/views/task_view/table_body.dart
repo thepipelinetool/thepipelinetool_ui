@@ -1,15 +1,17 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
+import '../../drawer/drawer.dart';
 import 'table_cell.dart';
 import 'constants.dart';
 import 'table_head.dart';
 
-class TableBody extends StatefulWidget {
+class TableBody extends ConsumerStatefulWidget {
   final String dagName;
-  final List<Map<dynamic, dynamic>> tasks;
+  final List<Map<String, dynamic>> tasks;
   final Map<String, dynamic> runs;
   //final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -28,7 +30,7 @@ class TableBody extends StatefulWidget {
   TableBodyState createState() => TableBodyState();
 }
 
-class TableBodyState extends State<TableBody> {
+class TableBodyState extends ConsumerState<TableBody> {
   late LinkedScrollControllerGroup _controllers;
   late ScrollController _firstColumnController;
   late ScrollController _restColumnsController;
@@ -107,8 +109,58 @@ class TableBodyState extends State<TableBody> {
                               // child:
                               Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                                "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}"),
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // ref.invalidate(fetchTaskProvider(widget.dagName));
+                                  // ref
+                                  //     .read(defaultTaskProvider.notifier)
+                                  //     .updateData(widget.tasks[index]);
+                                  ref
+                                      .read(selectedTaskProvider.notifier)
+                                      .updateData(SelectedTask(
+                                          runId: "default",
+                                          taskId: widget.tasks[index]["id"]
+                                              .toString(),
+                                          dagName: widget.dagName));
+
+                                  Scaffold.of(context).openEndDrawer();
+
+                                  // ref.invalidate(provider)
+                                },
+                                child: 
+                                // Tooltip(
+                                //   // message: 'I am a Tooltip',
+                                //   richMessage: TextSpan(
+                                //     // text: 'I am a rich tooltip. ',
+                                //     // style: TextStyle(color: Colors.red),
+                                //     children: <InlineSpan>[
+                                //       TextSpan(
+                                //         text:
+                                //             "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}",
+                                //         style: const TextStyle(
+                                //             fontWeight: FontWeight.bold),
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   preferBelow: false,
+                                //   verticalOffset: outerCellHeight / 2,
+                                //   showDuration: Duration.zero,
+                                //   child: 
+                                  Container(
+                                        height: firstCellWidth,
+                                    
+                                    child: Text(
+                                      "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}",
+                                      style: const TextStyle(
+                                        height: 1.11,
+                                          // decoration:
+                                          //     TextDecoration.underline
+                                              )),)
+                                // ),
+                              ),
+                            ),
                           ),
                         );
                       },

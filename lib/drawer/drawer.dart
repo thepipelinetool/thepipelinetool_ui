@@ -2,27 +2,26 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:thepipelinetool/views/task_view/constants.dart';
 import 'package:thepipelinetool/views/task_view/table_cell.dart';
-  JsonEncoder encoder = const JsonEncoder.withIndent('  ');
-  String prettyprint = encoder.convert(json);
+
+JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+String prettyprint = encoder.convert(json);
 final selectedTaskProvider =
-    StateNotifierProvider<SelectedTaskStateNotifier, SelectedTask>((ref) {
+    StateNotifierProvider<SelectedTaskStateNotifier, SelectedTask?>((ref) {
   return SelectedTaskStateNotifier();
 });
 
-final fetchTaskProvider = FutureProvider.autoDispose
-    .family<(Map<String, dynamic>, TaskStatus), String>((ref, dagName) async {
-  final selectedTask = ref.watch(selectedTaskProvider);
-  final taskStatus = await ref.watch(fetchTaskStatusProvider(
-      (dagName, selectedTask.runId, int.parse(selectedTask.taskId), true)).future);
+final fetchTaskProvider =
+    FutureProvider.autoDispose<(Map<String, dynamic>, TaskStatus)>((ref) async {
+  final selectedTask = ref.watch(selectedTaskProvider)!;
 
-  var path = '/task/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
+  var path =
+      '/task/${selectedTask.dagName}/${selectedTask.runId}/${selectedTask.taskId}';
 
   // print(selectedTask.taskId);
-  if (selectedTask.taskId == "default") {
-    path = '/task/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
+  if (selectedTask.runId == "default") {
+    path = '/default_task/${selectedTask.dagName}/${selectedTask.taskId}';
   }
   final client = ref.watch(clientProvider);
 
@@ -30,22 +29,31 @@ final fetchTaskProvider = FutureProvider.autoDispose
 
   final map = jsonDecode(response.body) as Map<String, dynamic>;
 
-  path = '/task_result/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
-
-  // print(selectedTask.taskId);
-  if (selectedTask.taskId == "default") {
-    path = '/task_result/$dagName/${selectedTask.runId}/${selectedTask.taskId}';
-  }
-
+  path =
+      '/task_result/${selectedTask.dagName}/${selectedTask.runId}/${selectedTask.taskId}';
   var map2 = {};
 
-  if (!{TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying}.contains(taskStatus)) {
+  TaskStatus taskStatus;
 
-    final response2 = await client.get(Uri.parse('http://localhost:8000$path'));
+  // print(selectedTask.taskId);
+  if (selectedTask.runId != "default") {
+    taskStatus = await ref.watch(fetchTaskStatusProvider((
+      selectedTask.dagName,
+      selectedTask.runId,
+      int.parse(selectedTask.taskId),
+      true
+    )).future);
+    if (!{TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying}
+        .contains(taskStatus)) {
+      final response2 =
+          await client.get(Uri.parse('http://localhost:8000$path'));
 
-    map2 = jsonDecode(response2.body) as Map<String, dynamic>;
-    map["results"] = map2;
-
+      map2 = jsonDecode(response2.body) as Map<String, dynamic>;
+      map["results"] = map2;
+      // print(map2);
+    }
+  } else {
+    taskStatus = TaskStatus.None;
   }
 
   // if (selectedTask.runId != "default" &&
@@ -62,8 +70,8 @@ final fetchTaskProvider = FutureProvider.autoDispose
   return (map, taskStatus);
 });
 
-class SelectedTaskStateNotifier extends StateNotifier<SelectedTask> {
-  SelectedTaskStateNotifier() : super(SelectedTask(runId: '', taskId: ''));
+class SelectedTaskStateNotifier extends StateNotifier<SelectedTask?> {
+  SelectedTaskStateNotifier() : super(null);
   void updateData(SelectedTask newData) {
     state = newData;
   }
@@ -73,16 +81,16 @@ class SelectedTaskStateNotifier extends StateNotifier<SelectedTask> {
 }
 
 class SelectedTask {
+  final String dagName;
   final String runId;
   final String taskId;
 
-  SelectedTask({required this.runId, required this.taskId});
+  SelectedTask(
+      {required this.runId, required this.taskId, required this.dagName});
 }
 
 class MyDrawer extends ConsumerStatefulWidget {
-  final String dagName;
-
-  const MyDrawer({required this.dagName, super.key});
+  const MyDrawer({super.key});
 
   @override
   MyDrawerState createState() => MyDrawerState();
@@ -109,30 +117,25 @@ class MyDrawerState extends ConsumerState<MyDrawer>
   Widget build(BuildContext context) {
     // final appState = ref.watch(selectedTaskProvider);
 
-    final task = ref.watch(fetchTaskProvider(widget.dagName));
+    final task = ref.watch(fetchTaskProvider);
 
     return switch (task) {
       AsyncData(:final value) => FadeTransition(
-        // key: const Key('key'),
+          // key: const Key('key'),
           opacity: _animation,
           child: () {
             final status = value.$2;
             final v = value.$1;
-            return 
-            Padding(
+            return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(children: [
                   Row(children: [
                     Container(
-                      key: Key("${v["function_name"]}_${v["id"]}"),
+                        key: Key("${v["function_name"]}_${v["id"]}"),
                         height: 50,
-                        child:
-                            Text("${v["function_name"]}_${v["id"]}")),
-  const Spacer(),
-                            Container(
-                        height: 50,
-                        child:
-                            Text(status.toString())),
+                        child: Text("${v["function_name"]}_${v["id"]}")),
+                    const Spacer(),
+                    Container(height: 50, child: Text(status.toString())),
                   ]),
                   // Expanded(
                   //     child:
@@ -149,18 +152,20 @@ class MyDrawerState extends ConsumerState<MyDrawer>
                           )
                         ]),
                         value: 'Args'),
-                        if (v.containsKey("results")) ExpansionPanelRadio(
-                        headerBuilder: (BuildContext context, bool isExpanded) {
-                          return const ListTile(
-                            title: Text('Attempts'),
-                          );
-                        },
-                        body: Column(children: [
-                          Container(
-                            child: Text(encoder.convert(v["results"])),
-                          )
-                        ]),
-                        value: 'Attempts')
+                    if (v.containsKey("results"))
+                      ExpansionPanelRadio(
+                          headerBuilder:
+                              (BuildContext context, bool isExpanded) {
+                            return const ListTile(
+                              title: Text('Attempts'),
+                            );
+                          },
+                          body: Column(children: [
+                            Container(
+                              child: Text(encoder.convert(v["results"])),
+                            )
+                          ]),
+                          value: 'Attempts')
                   ]),
                   Text(encoder.convert(v))
                   // )
@@ -171,7 +176,9 @@ class MyDrawerState extends ConsumerState<MyDrawer>
           }(),
         ),
       // ),
-      (_) => Container(color: Colors.red,)
+      (_) => Container(
+          color: Colors.red,
+        )
     };
 
     // return Text(appState);

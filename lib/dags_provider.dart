@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:thepipelinetool/deserialize/dag_options.dart';
 
 import 'views/task_view/table_cell.dart';

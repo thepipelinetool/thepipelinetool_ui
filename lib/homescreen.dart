@@ -75,7 +75,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     final dagProvider = ref.watch(fetchDagsOptionsProvider);
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
+      appBar: AppBar(scrolledUnderElevation: 0,toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
       // backgroundColor: Colors.red,
       body:
           // SingleChildScrollView(

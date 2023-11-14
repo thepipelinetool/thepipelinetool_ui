@@ -25,7 +25,7 @@ final List<Tab> myTabs = ['Tasks', 'Graph']
               Text(
                 e,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.black),
+                // style: const TextStyle(color: Colors.black),
               )
               ),
         )))
@@ -56,20 +56,21 @@ class DetailsPageState extends ConsumerState<DetailsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      appBar: AppBar(toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0 ,toolbarHeight: kMyToolbarHeight, title: const MyAppBar()),
       body: Scaffold(
         endDrawer: Container(
             width: 500,
-            child: Drawer(
+            child: const Drawer(
+              shape: ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.zero)),
               child: MyDrawer(
                 key: Key('Drawer'),
-                dagName: widget.dagName,
+                // dagName: widget.dagName,
               ),
             )),
-        body: Padding(padding: EdgeInsets.symmetric(horizontal: kHorizontalPadding),child: Column(
+        body: Padding(padding: const EdgeInsets.symmetric(horizontal: kHorizontalPadding),child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              // padding: const EdgeInsets.symmetric(horizontal: 20),
               height: 50,
               child: Row(
                 children: [
@@ -83,13 +84,13 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                   ),
                   Container(height: 30, child: TabBar(
                     indicatorSize: TabBarIndicatorSize.tab,
-                    indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+                    indicatorPadding: const EdgeInsets.symmetric(horizontal: 10),
                     // indicatorWeight: 0,
                     dividerColor: Colors.transparent,
                     // labelPadding: const EdgeInsets.only(right: 10),
                     // padding: EdgeInsets.symmetric(horizontal: 20),
                     isScrollable: true,
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     
 
                     controller: _tabController,
@@ -108,7 +109,8 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                         // ],
                         borderRadius:
                             BorderRadius.circular(20), // Creates border
-                        color: Colors.white),
+                        // color: Colors.white
+                        ),
                   ),)
                 ],
               ),
