@@ -31,10 +31,14 @@ final fetchTooltip = FutureProvider.autoDispose.family<String, TaskStatus>((ref,
 //     {attempt: 1, elapsed: 0, ended: 2023-11-13T01:42:17.206218+00:00, function_name: hi, is_branch: false, max_attempts: 1, premature_failure: false,
 // premature_failure_error_str: , resolved_args_str: 0, result: {hello: world}, started: 2023-11-13T01:42:17.203640+00:00, stderr: , stdout: 0
 // , success: true, task_id: 0, template_args_str: 0}
+    res += 'Attempt: ${result["attempt"]}/${result["max_attempts"]}\n';
     res += 'Started: ${result["started"]}\n';
     res += 'Ended: ${result["ended"]}\n';
     res += 'Elapsed: ${result["elapsed"]}\n';
     res += 'Success: ${result["success"]}';
+    if (result["premature_failure"]) {
+        res += '\nPremature Error: ${result["premature_failure_error_str"]}';
+    }
   }
 
   return res;

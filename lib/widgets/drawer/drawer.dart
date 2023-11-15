@@ -7,7 +7,7 @@ import 'package:thepipelinetool/widgets/drawer/attempts.dart';
 
 import '../dag_page/dag_page.dart';
 
-JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+JsonEncoder encoder = const JsonEncoder.withIndent('    ');
 String prettyprint = encoder.convert(json);
 
 class MyDrawer extends ConsumerStatefulWidget {
@@ -71,7 +71,7 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
                                 // tileColor: Theme.of(context).primaryColor,
 
                                 // style: ListTileStyle.list,
-                                title: Text('Args'),
+                                title: Text('Template Args'),
                               );
                             },
                             // body: v["template_args"] == null ? Container() : Container(width: 400, child: jsonView(v["template_args"], false)),
@@ -80,9 +80,9 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
                                 child: Container(
                                   padding: const EdgeInsets.only(
                                       left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
-                                  child: Text(encoder.convert(value["template_args"])),
+                                  child: SelectableText(encoder.convert(value["template_args"])),
                                 )),
-                            value: 'Args'),
+                            value: 'Template Args'),
                         // if (v.containsKey("results"))
                         ExpansionPanelRadio(
                             // backgroundColor: Colors.transparent,
