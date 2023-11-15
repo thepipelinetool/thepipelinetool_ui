@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/providers/drawer/task_info.dart';
+import 'package:thepipelinetool/widgets/drawer/attempts.dart';
 
 import '../dag_page/dag_page.dart';
 
@@ -91,11 +92,8 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
                                 const ListTile(title: Text('Attempts')),
                             body: Align(
                               alignment: Alignment.topLeft,
-                              child: Container(
-                                padding: const EdgeInsets.only(
-                                    left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
-                                child: const Text(""),
-                              ),
+                              child:  Attempts(),
+                              
                             ),
                             value: 'Attempts')
                       ],
