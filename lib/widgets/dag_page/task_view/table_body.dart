@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+import 'package:thepipelinetool/classes/selected_task.dart';
+import 'package:thepipelinetool/providers/drawer/selected_task.dart';
 
 import '../../drawer/drawer.dart';
 import 'table_cell.dart';
-import 'constants.dart';
+import '../../../classes/task_status.dart';
 import 'table_head.dart';
 
 class TableBody extends ConsumerStatefulWidget {
@@ -79,8 +81,7 @@ class TableBodyState extends ConsumerState<TableBody> {
           ),
           Expanded(
             child: ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: SingleChildScrollView(
                 controller: _firstColumnController,
                 physics: const AlwaysScrollableScrollPhysics(
@@ -95,7 +96,7 @@ class TableBodyState extends ConsumerState<TableBody> {
                     ...List.generate(
                       widget.tasks.length,
                       (index) {
-                        return Container(
+                        return SizedBox(
                           //   padding: EdgeInsets.only(top: 2),
                           height: outerCellHeight,
                           // width: firstCellWidth,
@@ -112,54 +113,50 @@ class TableBodyState extends ConsumerState<TableBody> {
                             child: MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
-                                onTap: () {
-                                  // ref.invalidate(fetchTaskProvider(widget.dagName));
-                                  // ref
-                                  //     .read(defaultTaskProvider.notifier)
-                                  //     .updateData(widget.tasks[index]);
-                                  ref
-                                      .read(selectedTaskProvider.notifier)
-                                      .updateData(SelectedTask(
-                                          runId: "default",
-                                          taskId: widget.tasks[index]["id"]
-                                              .toString(),
-                                          dagName: widget.dagName));
+                                  onTap: () {
+                                    // ref.invalidate(fetchTaskProvider(widget.dagName));
+                                    // ref
+                                    //     .read(defaultTaskProvider.notifier)
+                                    //     .updateData(widget.tasks[index]);
+                                    ref.read(selectedTaskProvider.notifier).state = SelectedTask(
+                                        runId: "default",
+                                        taskId: widget.tasks[index]["id"].toString(),
+                                        dagName: widget.dagName);
 
-                                  Scaffold.of(context).openEndDrawer();
+                                    Scaffold.of(context).openEndDrawer();
 
-                                  // ref.invalidate(provider)
-                                },
-                                child: 
-                                // Tooltip(
-                                //   // message: 'I am a Tooltip',
-                                //   richMessage: TextSpan(
-                                //     // text: 'I am a rich tooltip. ',
-                                //     // style: TextStyle(color: Colors.red),
-                                //     children: <InlineSpan>[
-                                //       TextSpan(
-                                //         text:
-                                //             "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}",
-                                //         style: const TextStyle(
-                                //             fontWeight: FontWeight.bold),
-                                //       ),
-                                //     ],
-                                //   ),
-                                //   preferBelow: false,
-                                //   verticalOffset: outerCellHeight / 2,
-                                //   showDuration: Duration.zero,
-                                //   child: 
-                                  Container(
-                                        height: firstCellWidth,
-                                    
-                                    child: Text(
-                                      "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}",
-                                      style: const TextStyle(
-                                        height: 1.11,
+                                    // ref.invalidate(provider)
+                                  },
+                                  child:
+                                      // Tooltip(
+                                      //   // message: 'I am a Tooltip',
+                                      //   richMessage: TextSpan(
+                                      //     // text: 'I am a rich tooltip. ',
+                                      //     // style: TextStyle(color: Colors.red),
+                                      //     children: <InlineSpan>[
+                                      //       TextSpan(
+                                      //         text:
+                                      //             "${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}",
+                                      //         style: const TextStyle(
+                                      //             fontWeight: FontWeight.bold),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      //   preferBelow: false,
+                                      //   verticalOffset: outerCellHeight / 2,
+                                      //   showDuration: Duration.zero,
+                                      //   child:
+                                      SizedBox(
+                                    height: firstCellWidth,
+                                    child: Text("${widget.tasks[index]["function_name"]}_${widget.tasks[index]["id"]}",
+                                        style: const TextStyle(
+                                          height: 1.11,
                                           // decoration:
                                           //     TextDecoration.underline
-                                              )),)
-                                // ),
-                              ),
+                                        )),
+                                  )
+                                  // ),
+                                  ),
                             ),
                           ),
                         );
@@ -175,22 +172,23 @@ class TableBodyState extends ConsumerState<TableBody> {
         ]),
         // ),
         Expanded(
-            child:
-                // SingleChildScrollView(
-                // controller: widget.scrollController,
-                // scrollDirection: Axis.horizontal,
-                //   physics: const BouncingScrollPhysics(),
-                //   child: SizedBox(
-                //     width: (widget.runs.length) * cellHeight,
-                //     child:
-                Column(children: [
-          TableHead(
-            // scrollController: _headController,
-            runs: widget.runs,
-            tasks: widget.tasks,
-          ),
-          Expanded(
-              child: ListView.builder(
+          child:
+              // SingleChildScrollView(
+              // controller: widget.scrollController,
+              // scrollDirection: Axis.horizontal,
+              //   physics: const BouncingScrollPhysics(),
+              //   child: SizedBox(
+              //     width: (widget.runs.length) * cellHeight,
+              //     child:
+              Column(
+            children: [
+              TableHead(
+                // scrollController: _headController,
+                runs: widget.runs,
+                tasks: widget.tasks,
+              ),
+              Expanded(
+                child: ListView.builder(
                   controller: _restColumnsController,
                   physics: const AlwaysScrollableScrollPhysics(
                     parent: BouncingScrollPhysics(),
@@ -204,8 +202,7 @@ class TableBodyState extends ConsumerState<TableBody> {
                         // final run = widget.runs[x];
                         final task = widget.tasks[y];
                         final key = '${task["function_name"]}_${task["id"]}';
-                        final containsFunction =
-                            widget.runs[runId].containsKey(key);
+                        final containsFunction = widget.runs[runId]["tasks"].containsKey(key);
 
                         // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
 
@@ -213,7 +210,7 @@ class TableBodyState extends ConsumerState<TableBody> {
                           return MultiplicationTableCell(
                             dagName: widget.dagName,
                             runId: runId,
-                            value: widget.runs[runId][key],
+                            value: widget.runs[runId]["tasks"][key],
                             // scaffoldKey: widget.scaffoldKey,
                             // color: Colors.red,
                           );
@@ -228,12 +225,15 @@ class TableBodyState extends ConsumerState<TableBody> {
                         //   // scaffoldKey: widget.scaffoldKey,
                         //   // color: Colors.red,
                         // );
-                        return Container(
-                            width: outerCellHeight, height: outerCellHeight);
+                        return const SizedBox(width: outerCellHeight, height: outerCellHeight);
                       }).toList(growable: false),
                     );
-                  })),
-        ])),
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
       // ),
     );

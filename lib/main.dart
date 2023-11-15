@@ -5,10 +5,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:thepipelinetool/appbar.dart';
-import 'package:thepipelinetool/details_page.dart';
+import 'package:thepipelinetool/widgets/appbar.dart';
+import 'package:thepipelinetool/widgets/dag_page/dag_page.dart';
 
-import 'homescreen.dart';
+import 'providers/darkmode.dart';
+import 'widgets/homescreen.dart';
 
 /// This sample app shows an app with two screens.
 ///
@@ -100,8 +101,9 @@ class MyApp extends ConsumerWidget {
         canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
         brightness: isDarkTheme ? Brightness.dark : Brightness.light,
         buttonTheme: Theme.of(context).buttonTheme.copyWith(
-            colorScheme:
-                isDarkTheme ? const ColorScheme.dark() : const ColorScheme.light()),
+            colorScheme: isDarkTheme
+                ? const ColorScheme.dark()
+                : const ColorScheme.light()),
         appBarTheme: const AppBarTheme(
           elevation: 0.0,
         ),

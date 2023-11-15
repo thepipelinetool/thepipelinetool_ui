@@ -5,9 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphite/graphite.dart';
+import 'package:thepipelinetool/classes/selected_task.dart';
+import 'package:thepipelinetool/providers/drawer/selected_task.dart';
+import 'package:thepipelinetool/providers/graph_view/runs.dart';
 
-import '../../drawer/drawer.dart';
-import '../task_view/table_cell.dart';
+import '../../../providers/http_client.dart';
 import 'node_card.dart';
 // import '../main.dart';
 
@@ -25,72 +27,6 @@ import 'node_card.dart';
 //   }
 // }
 
-final selectedItemProvider =
-    StateProvider.family.autoDispose<String, String>((ref, dagName) {
-  final runs = ref.watch(fetchRunsProvider(dagName));
-
-  return switch (runs) {
-    AsyncData(:final value) => value.first,
-    (_) => 'default'
-  };
-});
-
-final fetchGraphProvider = FutureProvider.autoDispose
-    .family<(List<Map<String, dynamic>>, String), String>((ref, dagName) async {
-  final runId = ref.watch(selectedItemProvider(dagName));
-
-  var path = '/graph/$runId';
-
-  if (runId == "default") {
-    path = '/default_graph/$dagName';
-  }
-  final client = ref.watch(clientProvider);
-
-  // final client = http.Client();
-  // ref.onDispose(client.close);
-  final response = await client.get(Uri.parse('http://localhost:8000$path'));
-  ref.keepAlive();
-
-  final map = (await compute(jsonDecode, response.body) as List<dynamic>)
-      .cast<Map<String, dynamic>>();
-  // print(runId);
-  // print(runId != "default");
-  if (runId != "default" &&
-      map.any(
-          (m) => {"Pending", "Running", "Retrying"}.contains(m['status']))) {
-    Future.delayed(const Duration(seconds: 3), () {
-      // print('refresh');
-      ref.invalidateSelf();
-    });
-  }
-
-  return (map, runId);
-});
-
-// "Pending" => Colors.grey,
-// "Success" => Colors.green,
-// "Failure" => Colors.red,
-// "Running" => HexColor.fromHex("#90EE90"),
-// "Retrying" => Colors.orange,
-// "Skipped" => Colors.pink,
-
-final fetchRunsProvider = FutureProvider.family
-    .autoDispose<List<String>, String>((ref, dagName) async {
-        final client = ref.watch(clientProvider);
-
-  final response = await client.get(
-    Uri.parse('http://localhost:8000/runs/$dagName'),
-  );
-
-  return (await compute(jsonDecode, response.body) as List<dynamic>)
-      .cast<int>()
-      .map((i) => i.toString())
-      .toList()
-      .reversed
-      .toList()
-    ..add('default');
-});
-
 class GraphView extends ConsumerStatefulWidget {
   final String dagName;
   //final GlobalKey<ScaffoldState> scaffoldKey;
@@ -100,20 +36,15 @@ class GraphView extends ConsumerStatefulWidget {
   @override
   GraphViewState createState() => GraphViewState();
 
-
-static final p = Paint()
-  ..color = Colors.blueGrey
-  ..style = PaintingStyle.stroke
-  ..strokeCap = StrokeCap.round
-  ..strokeJoin = StrokeJoin.round
-  ..strokeWidth = 2;
-
+  static final p = Paint()
+    ..color = Colors.blueGrey
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..strokeJoin = StrokeJoin.round
+    ..strokeWidth = 2;
 }
 
-class GraphViewState extends ConsumerState<GraphView>
-
-
-    with TickerProviderStateMixin {
+class GraphViewState extends ConsumerState<GraphView> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
@@ -143,40 +74,36 @@ class GraphViewState extends ConsumerState<GraphView>
 
   @override
   Widget build(BuildContext context) {
-    final runs = ref.watch(fetchRunsProvider(widget.dagName));
-    final graph = ref.watch(fetchGraphProvider(widget.dagName));
+    final runs = ref.watch(runsProvider(widget.dagName));
+    final graph = ref.watch(graphProvider(widget.dagName));
 
     return FadeTransition(
       opacity: _animation,
       child: Column(
         children: [
           Align(
-              alignment: Alignment.centerLeft,
-              child: DropdownButton<String>(
-                value: ref.watch(selectedItemProvider(widget.dagName)),
-                items: (switch (runs) {
-                  AsyncData(:final value) => value,
-                  (_) => ['default']
-                })
-                    .map<DropdownMenuItem<String>>(
-                  (String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  },
-                ).toList(),
-                onChanged: (String? newValue) {
-                  ref
-                      .read(selectedItemProvider(widget.dagName).notifier)
-                      .state = newValue!;
-                  FocusScope.of(context).requestFocus(FocusNode());
+            alignment: Alignment.centerLeft,
+            child: DropdownButton<Run>(
+              value: ref.watch(selectedRunDropDownProvider(widget.dagName)),
+              items: (switch (runs) { AsyncData(:final value) => value, (_) => [ Run.defaultRun] })
+                  .map<DropdownMenuItem<Run>>(
+                (Run value) {
+                  return DropdownMenuItem<Run>(
+                    value: value,
+                    child: Text(value.date),
+                  );
                 },
-              )),
+              ).toList(),
+              onChanged: (Run? newValue) {
+                ref.read(selectedRunDropDownProvider(widget.dagName).notifier).state = newValue!;
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+            ),
+          ),
           Expanded(
               child: switch (graph) {
             AsyncData(:final value) => () {
-                final (graph, runId) = value;
+                final (graph, run) = value;
 
                 final list = graph.map((m) => NodeInput.fromJson(m)).toList();
 
@@ -202,16 +129,15 @@ class GraphViewState extends ConsumerState<GraphView>
                         // print("${edge.from.id}->${edge.to.id}");
                       },
                       nodeBuilder: (ctx, node) {
-                        return NodeCard(
-                              dagName: widget.dagName, info: map[node.id]
-                        );
+                        return NodeCard(dagName: widget.dagName, info: map[node.id]);
                       },
                       paintBuilder: (edge) {
                         return GraphView.p;
                       },
                       onNodeTapUp: (_, node, __) {
-                        ref.read(selectedTaskProvider.notifier).updateData(
-                            SelectedTask(runId: runId, taskId: node.id, dagName: widget.dagName));
+                        ref
+                            .read(selectedTaskProvider.notifier)
+                            .state = SelectedTask(runId: run.runId, taskId: node.id, dagName: widget.dagName);
                         Scaffold.of(context).openEndDrawer();
                       },
                     ),

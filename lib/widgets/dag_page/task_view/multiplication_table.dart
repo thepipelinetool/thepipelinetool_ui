@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
-import 'table_head.dart';
 import 'table_body.dart';
 
 class MultiplicationTable extends StatefulWidget {
@@ -10,13 +8,13 @@ class MultiplicationTable extends StatefulWidget {
   final Map<String, dynamic> runs;
   //final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const MultiplicationTable(
-      {super.key,
-      required this.tasks,
-      required this.runs,
-      required this.dagName,
-      // required this.scaffoldKey
-      });
+  const MultiplicationTable({
+    super.key,
+    required this.tasks,
+    required this.runs,
+    required this.dagName,
+    // required this.scaffoldKey
+  });
   @override
   MultiplicationTableState createState() => MultiplicationTableState();
 }
@@ -43,24 +41,24 @@ class MultiplicationTableState extends State<MultiplicationTable> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    // Column(
-    //   children: [
-    //     TableHead(
-    //       scrollController: _headController,
-    //       runs: widget.runs,
-    //       tasks: widget.tasks,
-    //     ),
-    //     Expanded(
-    //       child: 
-          
-          TableBody(
-            // scrollController: _bodyController,
-            tasks: widget.tasks,
-            runs: widget.runs,
-            dagName: widget.dagName,
-            // scaffoldKey: widget.scaffoldKey,
-          // ),
+    return
+        // Column(
+        //   children: [
+        //     TableHead(
+        //       scrollController: _headController,
+        //       runs: widget.runs,
+        //       tasks: widget.tasks,
+        //     ),
+        //     Expanded(
+        //       child:
+
+        TableBody(
+      // scrollController: _bodyController,
+      tasks: widget.tasks,
+      runs: widget.runs,
+      dagName: widget.dagName,
+      // scaffoldKey: widget.scaffoldKey,
+      // ),
       //   ),
       // ],
     );

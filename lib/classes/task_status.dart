@@ -1,5 +1,7 @@
 // const int maxNumber = 400;
 
+// ignore_for_file: constant_identifier_names
+
 enum TaskStatus {
   Pending,
   Running,

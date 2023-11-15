@@ -1,36 +1,9 @@
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
+import 'package:thepipelinetool/providers/task_view/task_grid.dart';
 
 import 'multiplication_table.dart';
-import 'table_cell.dart';
-
-final fetchTasksProvider =
-    FutureProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, dagName) async {
-  // final path = '/default_tasks/$dagName';
-  final client = ref.watch(clientProvider);
-
-  final response = await client.get(
-    Uri.parse('http://localhost:8000/default_tasks/$dagName'),
-  );
-
-  return (await compute(jsonDecode, response.body) as List<dynamic>)
-      .cast<Map<String, dynamic>>();
-});
-
-final fetchRunsWithTasksProvider = FutureProvider.family
-    .autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
-  final client = ref.watch(clientProvider);
-
-  final response = await client.get(
-    Uri.parse('http://localhost:8000/runs_with_tasks/$dagName'),
-  );
-
-  return await compute(jsonDecode, response.body) as Map<String, dynamic>;
-});
 
 class TaskView extends ConsumerStatefulWidget {
   // final Widget Function(BuildContext context) bottomBar;
@@ -44,17 +17,6 @@ class TaskView extends ConsumerStatefulWidget {
   @override
   TaskViewState createState() => TaskViewState();
 }
-
-final combinedProvider = FutureProvider.family
-    .autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
-  final taskProvider = await ref.watch(fetchTasksProvider(dagName).future);
-  final runsProvider =
-      await ref.watch(fetchRunsWithTasksProvider(dagName).future);
-  return {
-    'tasks': taskProvider,
-    'runs': runsProvider,
-  };
-});
 
 class TaskViewState extends ConsumerState<TaskView>
     with TickerProviderStateMixin {
@@ -76,7 +38,7 @@ class TaskViewState extends ConsumerState<TaskView>
 
   @override
   Widget build(BuildContext context) {
-    final provider = ref.watch(combinedProvider(widget.dagName));
+    final provider = ref.watch(taskGridProvider(widget.dagName));
 
     return switch (provider) {
       AsyncData(:final value) => FadeTransition(

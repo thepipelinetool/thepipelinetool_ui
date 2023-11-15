@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../providers/darkmode.dart';
 
 class MyAppBar extends ConsumerWidget {
   const MyAppBar({super.key});
@@ -9,7 +10,6 @@ class MyAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final darkmode = ref.watch(darkmodeProvider);
-
 
     return Row(
       children: [
@@ -25,27 +25,18 @@ class MyAppBar extends ConsumerWidget {
               },
               child: const Text(
                 'DAGS',
-                style:
-                    TextStyle(decoration: TextDecoration.underline), // optional
+                style: TextStyle(decoration: TextDecoration.underline), // optional
               ),
             ),
           ),
         ),
         const Spacer(),
-        Switch(value: darkmode, onChanged: (v) {
-          ref.read(darkmodeProvider.notifier).change(v);
-        })
+        Switch(
+            value: darkmode,
+            onChanged: (v) {
+              ref.read(darkmodeProvider.notifier).change(v);
+            })
       ],
     );
   }
-}
-
-final darkmodeProvider = StateNotifierProvider<DarkMode, bool>((ref) {
-  return DarkMode();
-});
-
-class DarkMode extends StateNotifier<bool> {
-  DarkMode() : super(false);
-
-  void change(bool text) => state = text;
 }
