@@ -87,7 +87,7 @@ class MultiplicationTableCell extends ConsumerWidget {
         //   //     Colors.red,
         // decoration: BoxDecoration(
         border: Border(
-          top: const BorderSide(width: .0, color: Colors.transparent),
+          top: const BorderSide(width: 1.0, color: Colors.transparent),
           bottom: BorderSide(width: 1.0, color: Colors.grey.withAlpha(80)),
         ),
       ),
