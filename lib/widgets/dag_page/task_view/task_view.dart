@@ -172,7 +172,7 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                       // trailing: BorderSide(),
                       ),
                 ),
-                extent: FixedTableSpanExtent(index == 0 ? 200 : cellWidth),
+                extent: FixedTableSpanExtent(index == 0 ? 200 : outerCellHeight),
                 onEnter: (_) => print('Entered column $index'),
                 // cursor: index ==  SystemMouseCursors.contextMenu,
               );
