@@ -1,16 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/classes/selected_task.dart';
 import 'package:thepipelinetool/providers/drawer/selected_task.dart';
 import 'package:thepipelinetool/classes/task_status.dart';
-import 'package:retry/retry.dart';
 
 import '../../../classes/colors.dart';
-import '../../../providers/http_client.dart';
 import '../../../providers/task_status.dart';
 import '../../../providers/tooltip.dart';
 
@@ -72,7 +67,7 @@ class MultiplicationTableCell extends ConsumerWidget {
     return Container(
       width: outerCellHeight,
       height: outerCellHeight,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         //   // color:
         //   //     // value["status"] == "Pending"
         //   //     //     ? switch (taskStatus) {
@@ -87,8 +82,8 @@ class MultiplicationTableCell extends ConsumerWidget {
         //   //     Colors.red,
         // decoration: BoxDecoration(
         border: Border(
-          top: const BorderSide(width: 1.0, color: Colors.transparent),
-          bottom: BorderSide(width: 1.0, color: Colors.grey.withAlpha(80)),
+          // top: BorderSide(width: 1.0, color: Colors.transparent),
+          bottom: BorderSide(width: 1.0, color: Color.fromRGBO(158, 158, 158, 1)),
         ),
       ),
       // ),
@@ -127,7 +122,7 @@ class MultiplicationTableCell extends ConsumerWidget {
                     height: cellWidth,
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(1.5),
+                      // borderRadius: BorderRadius.circular(1.5),
                     ),
                   )
                 : Tooltip(

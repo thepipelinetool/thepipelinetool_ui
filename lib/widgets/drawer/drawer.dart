@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/providers/drawer/task_info.dart';
 import 'package:thepipelinetool/widgets/drawer/attempts.dart';
 
+import '../../providers/drawer/selected_task.dart';
 import '../dag_page/dag_page.dart';
 
 JsonEncoder encoder = const JsonEncoder.withIndent('    ');
@@ -38,6 +39,8 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
     // final appState = ref.watch(selectedTaskProvider);
 
     final task = ref.watch(taskInfoProvider);
+    final isDefault = ref.watch(selectedTaskProvider)?.runId == "default";
+
 
     return switch (task) {
       AsyncData(value: final value) => FadeTransition(
@@ -84,13 +87,14 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
                                 )),
                             value: 'Template Args'),
                         // if (v.containsKey("results"))
+                        if (!isDefault)
                         ExpansionPanelRadio(
                             // backgroundColor: Colors.transparent,
 
                             canTapOnHeader: true,
                             headerBuilder: (BuildContext context, bool isExpanded) =>
                                 const ListTile(title: Text('Attempts')),
-                            body: Align(
+                            body: const Align(
                               alignment: Alignment.topLeft,
                               child:  Attempts(),
                               

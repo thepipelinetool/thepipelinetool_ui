@@ -5,7 +5,6 @@ import 'package:thepipelinetool/classes/task_status.dart';
 
 import '../classes/selected_task.dart';
 import '../views/task_view/http_client_provider.dart';
-import 'drawer/selected_task.dart';
 
 final hoveredTooltipProvider = StateProvider<SelectedTask?>((ref) => null);
 

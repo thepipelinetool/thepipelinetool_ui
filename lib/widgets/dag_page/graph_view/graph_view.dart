@@ -1,7 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphite/graphite.dart';
@@ -9,7 +6,6 @@ import 'package:thepipelinetool/classes/selected_task.dart';
 import 'package:thepipelinetool/providers/drawer/selected_task.dart';
 import 'package:thepipelinetool/providers/graph_view/runs.dart';
 
-import '../../../providers/http_client.dart';
 import 'node_card.dart';
 // import '../main.dart';
 

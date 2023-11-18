@@ -9,7 +9,7 @@ class Status extends ConsumerWidget {
     // final status = ref.watch()
 
     return Container(
-      child: Center(child: Text(''))
+      child: const Center(child: Text(''))
     );
   }
 

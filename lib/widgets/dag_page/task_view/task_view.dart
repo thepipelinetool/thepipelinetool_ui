@@ -173,22 +173,22 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                       ),
                 ),
                 extent: FixedTableSpanExtent(index == 0 ? 200 : outerCellHeight),
-                onEnter: (_) => print('Entered column $index'),
+                // onEnter: (_) => print('Entered column $index'),
                 // cursor: index ==  SystemMouseCursors.contextMenu,
               );
             },
             pinnedRowCount: 1,
             rowCount: value["tasks"].length + 1,
             rowBuilder: (int index) {
-              return TableSpan(
-                backgroundDecoration: const TableSpanDecoration(
+              return const TableSpan(
+                backgroundDecoration: TableSpanDecoration(
                     // border: const TableSpanBorder(
                     //   trailing: BorderSide(
                     //     width: 1,
                     //   ),
                     // ),
                     ),
-                extent: const FixedTableSpanExtent(outerCellHeight),
+                extent: FixedTableSpanExtent(outerCellHeight),
                 // cursor: SystemMouseCursors.click,
               );
             },
