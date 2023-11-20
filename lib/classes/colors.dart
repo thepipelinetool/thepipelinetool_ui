@@ -11,7 +11,7 @@ Color getStylingForGridStatus(TaskStatus taskStatus) {
     TaskStatus.Failure => Colors.red,
     TaskStatus.Running => HexColor.fromHex("#90EE90"),
     TaskStatus.Retrying => Colors.orange,
-    TaskStatus.Skipped => Colors.pink,
+    TaskStatus.Skipped => const Color.fromARGB(255, 255, 140, 253),
     TaskStatus.None => Colors.transparent,
     // (_) => Colors.transparent,
   };
