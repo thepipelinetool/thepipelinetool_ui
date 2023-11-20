@@ -18,6 +18,7 @@ final fetchTooltip = FutureProvider.autoDispose.family<String, TaskStatus>((ref,
 
   var res = 'Status: ${status.toString()}\n';
 
+  // TODO show results for these as well, just different
   if (!{TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying, TaskStatus.None, TaskStatus.Skipped}.contains(status)) {
     final response3 = await client.get(
       Uri.parse(
