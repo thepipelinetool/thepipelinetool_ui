@@ -10,7 +10,7 @@
   </a>
 </div>
 
-The UI for thepipelinetool_server
+The UI for [thepipelinetool_server](https://github.com/thepipelinetool/thepipelinetool_server)
 
 ## License
 This work is dual-licensed under Apache 2.0 and MIT.
