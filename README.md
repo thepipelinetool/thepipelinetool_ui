@@ -15,5 +15,4 @@
 The UI for [thepipelinetool_server](https://github.com/thepipelinetool/thepipelinetool_server)
 
 ## License
-This work is dual-licensed under Apache 2.0 and MIT.
-You can choose between one of them if you use this work.
+AGPLv3
