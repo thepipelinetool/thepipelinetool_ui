@@ -9,14 +9,9 @@ import '../../../providers/drawer/selected_task.dart';
 // import 'multiplication_table.dart';
 
 class TaskView extends ConsumerStatefulWidget {
-  // final Widget Function(BuildContext context) bottomBar;
   final String dagName;
-  //final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const TaskView(this.dagName,
-      //  this.scaffoldKey,
-      {Key? key})
-      : super(key: key);
+  const TaskView(this.dagName, {super.key});
   @override
   TaskViewState createState() => TaskViewState();
 }
@@ -38,7 +33,6 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
     _verticalController.dispose();
     super.dispose();
   }
-  // TaskViewState(this.dagName, {super.key, required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
@@ -61,16 +55,9 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: () {
-                      // ref.invalidate(fetchTaskProvider(widget.dagName));
-                      // ref
-                      //     .read(defaultTaskProvider.notifier)
-                      //     .updateData(widget.tasks[index]);
                       ref.read(selectedTaskProvider.notifier).state =
                           SelectedTask(runId: "default", taskId: task["id"].toString(), dagName: widget.dagName);
-
                       Scaffold.of(context).openEndDrawer();
-
-                      // ref.invalidate(provider)
                     },
                     child: Text("${task["function_name"]}_${task["id"]}"),
                   ),
@@ -83,20 +70,8 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                 return Container(
                   width: outerCellHeight,
                   height: outerCellHeight,
-
                   alignment: Alignment.center,
-                  // child: Padding(
-                  // padding: const EdgeInsets.all(3.8),
-                  child:
-                      // MouseRegion(
-                      //   cursor: SystemMouseCursors.click,
-                      //   child: GestureDetector(
-                      //     onTap: () {
-                      //       // print(runId);
-                      //       // print(value);
-                      //     },
-                      //     child:
-                      Tooltip(
+                  child: Tooltip(
                     message:
                         "Run Id: ${keys[vicinity.column - 1]}\nDate: ${value["runs"][keys[vicinity.column - 1]]["date"]}",
                     preferBelow: false,
@@ -108,41 +83,22 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                       decoration: BoxDecoration(
                         color: Colors.green, // TODO
                         borderRadius: BorderRadius.circular(50),
-                        // border: Border.all(
-                        //   color: Colors.black12,
-                        //   width: 1.0,
-                        // ),
                       ),
-                      // ),
                     ),
-                    // ),
-                    // ),
                   ),
-                  // Text(
-                  //   '${value ?? ''}',
-                  //   style: TextStyle(fontSize: 16.0),
-                  // ),
                 );
               }
-
-              // final run = value["runs"][vicinity.column - 1];
-
-              // return Text("${run["date"]}");
 
               final task = value["tasks"][vicinity.row - 1];
               final key = '${task["function_name"]}_${task["id"]}';
               var runId = keys[vicinity.column - 1];
               final containsFunction = value["runs"][runId]["tasks"].containsKey(key);
 
-              // print("dagName: ${widget.dagName} runId: $runId value: ${widget.runs[runId][key]}");
-
               if (containsFunction) {
                 return MultiplicationTableCell(
                   dagName: widget.dagName,
                   runId: runId,
                   value: value["runs"][runId]["tasks"][key],
-                  // scaffoldKey: widget.scaffoldKey,
-                  // color: Colors.red,
                 );
               }
 
@@ -151,68 +107,23 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
             pinnedColumnCount: 1,
             columnCount: value["runs"].length + 1,
             columnBuilder: (int index) {
-              // if (index == 0) {
-              //   return TableSpan(
-              //   foregroundDecoration: const TableSpanDecoration(
-              //     border: TableSpanBorder(
-              //       // trailing: BorderSide(),
-              //     ),
-              //   ),
-              //   extent: FixedTableSpanExtent(index == 0 ? 50 : cellWidth),
-              //   onEnter: (_) => print('Entered column $index'),
-              //   cursor: SystemMouseCursors.contextMenu,
-              // );
-              // }
-
-              // index--;
-
               return TableSpan(
-                foregroundDecoration: const TableSpanDecoration(
-                  border: TableSpanBorder(
-                      // trailing: BorderSide(),
-                      ),
-                ),
+                foregroundDecoration: const TableSpanDecoration(border: TableSpanBorder()),
                 extent: FixedTableSpanExtent(index == 0 ? 200 : outerCellHeight),
-                // onEnter: (_) => print('Entered column $index'),
-                // cursor: index ==  SystemMouseCursors.contextMenu,
               );
             },
             pinnedRowCount: 1,
             rowCount: value["tasks"].length + 1,
             rowBuilder: (int index) {
               return const TableSpan(
-                backgroundDecoration: TableSpanDecoration(
-                    // border: const TableSpanBorder(
-                    //   trailing: BorderSide(
-                    //     width: 1,
-                    //   ),
-                    // ),
-                    ),
+                backgroundDecoration: TableSpanDecoration(),
                 extent: FixedTableSpanExtent(outerCellHeight),
-                // cursor: SystemMouseCursors.click,
               );
             },
-          )
-          // MultiplicationTable(
-          //   tasks: value["tasks"],
-          //   runs: value["runs"],
-          //   dagName: widget.dagName,
-          //   // scaffoldKey: widget.scaffoldKey,
-          // ),
           ),
-      // CustomScrollView(slivers: [
-      //     SliverList.separated(
-      //       itemCount: value.length,
-      //       itemBuilder: (BuildContext context, int index) {
-      //         return Text(value[index]["function_name"].toString());
-      //       },
-      //       separatorBuilder: (BuildContext context, int index) =>
-      //           const Divider(),
-      //     )
-      //   ]),
+        ),
       AsyncError() => const Text('Oops, something unexpected happened'),
       _ => Container(),
-      // const Center(child: CircularProgressIndicator()),
     };
   }
 }
