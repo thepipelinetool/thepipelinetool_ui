@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'task_status.dart';
 
-Color getStylingForGridStatus(TaskStatus taskStatus) {
+Color getColorByStatus(TaskStatus taskStatus) {
   return switch (taskStatus) {
     TaskStatus.Pending => Colors.grey,
     TaskStatus.Success => Colors.green,

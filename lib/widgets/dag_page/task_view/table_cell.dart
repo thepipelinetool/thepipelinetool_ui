@@ -44,7 +44,7 @@ class MultiplicationTableCell extends ConsumerWidget {
 
     switch (taskStatus) {
       case AsyncData(:final value):
-        color = getStylingForGridStatus(value);
+        color = getColorByStatus(value);
         status = value;
       case AsyncError():
         ref.invalidate(fetchTaskStatusProvider((runId, value["id"], true)));

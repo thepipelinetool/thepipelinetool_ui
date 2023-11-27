@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/providers/drawer/task_info.dart';
 import 'package:thepipelinetool/widgets/drawer/attempts.dart';
+import 'package:thepipelinetool/widgets/drawer/status.dart';
 
 import '../../providers/drawer/selected_task.dart';
 import '../dag_page/dag_page.dart';
@@ -39,136 +40,67 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
     // final appState = ref.watch(selectedTaskProvider);
 
     final task = ref.watch(taskInfoProvider);
-    final isDefault = ref.watch(selectedTaskProvider)?.runId == "default";
-
+    final runId = ref.watch(selectedTaskProvider)?.runId;
+    final isDefault = runId == "default";
 
     return switch (task) {
-      AsyncData(value: final value) => FadeTransition(
-          // key: const Key('key'),
-          opacity: _animation,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                Row(children: [
-                  SizedBox(
-                      key: Key("${value["function_name"]}_${value["id"]}"),
-                      height: 50,
-                      child: Text("${value["function_name"]}_${value["id"]}")),
-                  const Spacer(),
-                  // TODO
-                  // SizedBox(height: 50, child: Text(status.toString())),
-                ]),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: ExpansionPanelList.radio(
-                      // materialGapSize: 0,
-                      // dividerColor: Colors.transparent,
-                      elevation: 0,
-                      children: [
-                        ExpansionPanelRadio(
-                            // backgroundColor: Colors.transparent,
-                            canTapOnHeader: true,
-                            headerBuilder: (BuildContext context, bool isExpanded) {
-                              return const ListTile(
-                                // tileColor: Theme.of(context).primaryColor,
-
-                                // style: ListTileStyle.list,
-                                title: Text('Template Args'),
-                              );
-                            },
-                            // body: v["template_args"] == null ? Container() : Container(width: 400, child: jsonView(v["template_args"], false)),
-                            body: Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                      left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
-                                  child: SelectableText(encoder.convert(value["template_args"])),
-                                )),
-                            value: 'Template Args'),
-                        // if (v.containsKey("results"))
-                        if (!isDefault)
-                        ExpansionPanelRadio(
-                            // backgroundColor: Colors.transparent,
-
-                            canTapOnHeader: true,
-                            headerBuilder: (BuildContext context, bool isExpanded) =>
-                                const ListTile(title: Text('Attempts')),
-                            body: const Align(
-                              alignment: Alignment.topLeft,
-                              child:  Attempts(),
-                              
-                            ),
-                            value: 'Attempts')
-                      ],
+      AsyncData(value: final value) => () {
+          final items = [
+            const SizedBox(height: 10),
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              SizedBox(
+                key: Key("${value["function_name"]}_${value["id"]}"),
+                child: Text(
+                  "${value["function_name"]}_${value["id"]}",
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              const Spacer(),
+              if (!isDefault) Status(runId!, value["id"]),
+            ]),
+            const SizedBox(height: 10),
+            Expanded(
+              child: SingleChildScrollView(
+                child: ExpansionPanelList.radio(
+                  elevation: 0,
+                  children: [
+                    ExpansionPanelRadio(
+                      canTapOnHeader: true,
+                      headerBuilder: (BuildContext context, bool isExpanded) =>
+                          const ListTile(title: Text('Template Args')),
+                      body: Align(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
+                          child: SelectableText(
+                            encoder.convert(value["template_args"]),
+                          ),
+                        ),
+                      ),
+                      value: 'Template Args',
                     ),
-                    // Text(encoder.convert(v))
-                  ),
-                )
-              ],
+                    if (!isDefault)
+                      ExpansionPanelRadio(
+                          canTapOnHeader: true,
+                          headerBuilder: (BuildContext context, bool isExpanded) =>
+                              const ListTile(title: Text('Attempts')),
+                          body: const Align(alignment: Alignment.topLeft, child: Attempts()),
+                          value: 'Attempts')
+                  ],
+                ),
+              ),
+            )
+          ];
+          return FadeTransition(
+            opacity: _animation,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView.builder(itemCount: items.length, itemBuilder: (ctx, index) => items[index]),
             ),
-          ),
-
-          // print(value);
-          // return Text(value.toString());
-        ),
-      // ),
-      (_) => Container(
-          // color: Colors.red,
-          )
+          );
+        }(),
+      (_) => Container()
     };
-
-    // return Text(appState);
-    // return Text("test");
   }
 }
-
-// Widget jsonView(Object o, bool inner) {
-//   var items = <Widget>[];
-//   if (o is List) {
-//     items = o.map((e) => Text(e.toString())).toList();
-//     // print(1);
-//   } else if (o is Map) {
-//     items = [
-//       Container(
-//           // decoration: BoxDecoration(
-//           //     // border: Border.all()
-//           //     ),
-//           decoration: BoxDecoration(
-//             border: Border(
-//                 top: const BorderSide(),
-//                 left: const BorderSide(),
-//                 bottom: const BorderSide(),
-//                 right: inner ? BorderSide.none : const BorderSide()),
-//           ),
-//           child: Table(
-//               children:
-//                   // TableRow(children: o.keys.map((e) => Text(e.toString())).toList()),
-//                   // TableRow(children: o.values.map((e) => jsonView(e)).toList())
-//                   o.entries
-//                       .map((e) => TableRow(children: [
-//                             Text("${e.key}:"),
-//                             Align(
-//                                 alignment: Alignment.centerLeft,
-//                                 child: jsonView(e.value, true))
-//                           ]))
-//                       .toList()))
-//     ];
-//     // print(2);
-//   } else {
-//     items = [Text(o.toString())];
-//     // print(3);
-//   }
-//   // print(items);
-
-//   // return ListView.builder(
-//   //   itemCount: items.length,
-//   //   itemBuilder: (ctx, index) {
-//   //     return items[index];
-//   //   });
-//   return Wrap(
-//       // color: Colors.blue,
-//       children: [
-//         Column(crossAxisAlignment: CrossAxisAlignment.start, children: items)
-//       ]);
-// }
