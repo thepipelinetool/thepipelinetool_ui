@@ -59,7 +59,12 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                           SelectedTask(runId: "default", taskId: task["id"].toString(), dagName: widget.dagName);
                       Scaffold.of(context).openEndDrawer();
                     },
-                    child: Text("${task["function_name"]}_${task["id"]}"),
+                    child: Text(
+                      "${task["function_name"]}_${task["id"]}",
+                      style: TextStyle(
+                        height: 1.1
+                      ),
+                    ),
                   ),
                 );
               }
