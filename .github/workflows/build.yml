@@ -2,13 +2,8 @@ name: build
 
 on:
   push:
-    branches:
-      - '**'
-    paths:
-      - .github/workflows/build.yml
-      - lib/**
-      - pubspec.yaml
-
+    tags:
+      - '*'
 
 env:
   # update with the name of the main binary
@@ -46,6 +41,10 @@ jobs:
         run: |
           echo "RELEASE_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
 
+
+      - uses: little-core-labs/get-git-tag@v3.0.1
+        id: get_version
+
       - name: Upload binaries to release
         if: ${{ env.add_binaries_to_github_release == 'true' }}
         uses: svenstaro/upload-release-action@v2
@@ -53,5 +52,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.binary }}.zip
           asset_name: ${{ env.binary }}.zip
-          tag: ${{ env.RELEASE_DATE }}
+          tag: ${{ steps.get_version.outputs.tag }}
           overwrite: true
