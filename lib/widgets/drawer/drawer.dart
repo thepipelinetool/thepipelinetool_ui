@@ -19,7 +19,8 @@ class MyDrawer extends ConsumerStatefulWidget {
   MyDrawerState createState() => MyDrawerState();
 }
 
-class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixin {
+class MyDrawerState extends ConsumerState<MyDrawer>
+    with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 300),
     vsync: this,
@@ -59,36 +60,38 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
               if (!isDefault) Status(runId!, value["id"]),
             ]),
             const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: ExpansionPanelList.radio(
-                  elevation: 0,
-                  children: [
-                    ExpansionPanelRadio(
-                      canTapOnHeader: true,
-                      headerBuilder: (BuildContext context, bool isExpanded) =>
-                          const ListTile(title: Text('Template Args')),
-                      body: Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
-                          child: SelectableText(
-                            encoder.convert(value["template_args"]),
-                          ),
+            SingleChildScrollView(
+              child: ExpansionPanelList.radio(
+                elevation: 0,
+                children: [
+                  ExpansionPanelRadio(
+                    canTapOnHeader: true,
+                    headerBuilder: (BuildContext context, bool isExpanded) =>
+                        const ListTile(title: Text('Template Args')),
+                    body: Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                            left: kHorizontalPadding,
+                            right: kHorizontalPadding,
+                            bottom: kHorizontalPadding),
+                        child: SelectableText(
+                          encoder.convert(value["template_args"]),
                         ),
                       ),
-                      value: 'Template Args',
                     ),
-                    if (!isDefault)
-                      ExpansionPanelRadio(
-                          canTapOnHeader: true,
-                          headerBuilder: (BuildContext context, bool isExpanded) =>
-                              const ListTile(title: Text('Attempts')),
-                          body: const Align(alignment: Alignment.topLeft, child: Attempts()),
-                          value: 'Attempts')
-                  ],
-                ),
+                    value: 'Template Args',
+                  ),
+                  if (!isDefault)
+                    ExpansionPanelRadio(
+                        canTapOnHeader: true,
+                        headerBuilder:
+                            (BuildContext context, bool isExpanded) =>
+                                const ListTile(title: Text('Attempts')),
+                        body: const Align(
+                            alignment: Alignment.topLeft, child: Attempts()),
+                        value: 'Attempts')
+                ],
               ),
             )
           ];
@@ -96,7 +99,9 @@ class MyDrawerState extends ConsumerState<MyDrawer> with TickerProviderStateMixi
             opacity: _animation,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ListView.builder(itemCount: items.length, itemBuilder: (ctx, index) => items[index]),
+              child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (ctx, index) => items[index]),
             ),
           );
         }(),

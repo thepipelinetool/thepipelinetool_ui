@@ -133,34 +133,34 @@ packages:
     dependency: "direct dev"
     description:
       name: custom_lint
-      sha256: f9a828b696930cf8307f9a3617b2b65c9b370e484dc845d69100cadb77506778
+      sha256: "198ec6b8e084d22f508a76556c9afcfb71706ad3f42b083fe0ee923351a96d90"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.6"
+    version: "0.5.7"
   custom_lint_builder:
     dependency: transitive
     description:
       name: custom_lint_builder
-      sha256: c6f656a4d83385fc0656ae60410ed06bb382898c45627bfb8bbaa323aea97883
+      sha256: dfcfa987d2bd9d0ba751ef4bdef0f6c1aa0062f2a67fe716fd5f3f8b709d6418
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.6"
+    version: "0.5.7"
   custom_lint_core:
     dependency: transitive
     description:
       name: custom_lint_core
-      sha256: e20a67737adcf0cf2465e734dd624af535add11f9edd1f2d444909b5b0749650
+      sha256: f84c3fe2f27ef3b8831953e477e59d4a29c2952623f9eac450d7b40d9cdd94cc
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.6"
+    version: "0.5.7"
   dart_style:
     dependency: transitive
     description:
       name: dart_style
-      sha256: abd7625e16f51f554ea244d090292945ec4d4be7bfbaf2ec8cccea568919d334
+      sha256: "40ae61a5d43feea6d24bd22c0537a6629db858963b99b4bc1c3db80676f32368"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.4"
   data_table_2:
     dependency: "direct main"
     description:
@@ -505,10 +505,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: b715b8d3858b6fa9f68f87d20d98830283628014750c2b09b6f516c1da4af2a7
+      sha256: df5a4d8f22ee4ccd77f8839ac7cb274ebc11ef9adcce8b92be14b797fe889921
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.1"
   vector_math:
     dependency: transitive
     description:
