@@ -10,6 +10,19 @@ import 'package:thepipelinetool/widgets/dag_page/dag_page.dart';
 import 'providers/darkmode.dart';
 import 'widgets/homescreen.dart';
 
+class Config {
+  static const BASE_URL = "http://localhost:8000";
+  static const ALL_RUNS = "/tasks/all/";
+  static const DAGS = "/dags";
+  static const RESULTS = "/results/";
+  static const RUNS = "/runs/";
+  static const TASKS = "/tasks/";
+  static const DEFAULT_TASKS = "/tasks/default/";
+  static const STATUSES = "/statuses/";
+  static const GRAPHS = "/graphs/";
+  static const DEFAULT_GRAPHS = "/graphs/default/";
+}
+
 /// This sample app shows an app with two screens.
 ///
 /// The first route '/' is mapped to [HomeScreen], and the second route

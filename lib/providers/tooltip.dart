@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/classes/task_status.dart';
 
 import '../classes/selected_task.dart';
+import '../main.dart';
 import '../views/task_view/http_client_provider.dart';
 
 final hoveredTooltipProvider = StateProvider<SelectedTask?>((ref) => null);
 
-final fetchTooltip = FutureProvider.autoDispose.family<String, TaskStatus>((ref, status) async {
+final fetchTooltip =
+    FutureProvider.autoDispose.family<String, TaskStatus>((ref, status) async {
   final client = ref.watch(clientProvider);
   final hovered = ref.watch(hoveredTooltipProvider);
 
@@ -19,11 +21,17 @@ final fetchTooltip = FutureProvider.autoDispose.family<String, TaskStatus>((ref,
   var res = 'Status: ${status.toString()}\n';
 
   // TODO show results for these as well, just different
-  if (!{TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying, TaskStatus.None, TaskStatus.Skipped}.contains(status)) {
+  if (!{
+    TaskStatus.Pending,
+    TaskStatus.Running,
+    TaskStatus.Retrying,
+    TaskStatus.None,
+    TaskStatus.Skipped
+  }.contains(status)) {
     final response3 = await client.get(
       Uri.parse(
           // TODO use task result info? we dont use the actual result here, only info
-          'http://localhost:8000/task_result/${hovered.runId}/${hovered.taskId}'),
+          '${Config.BASE_URL}${Config.RESULTS}${hovered.runId}${hovered.taskId}'),
       // No need to manually encode the query parameters, the "Uri" class does it for us.
       // queryParameters: {'type': activityType},
     );
@@ -37,7 +45,7 @@ final fetchTooltip = FutureProvider.autoDispose.family<String, TaskStatus>((ref,
     res += 'Elapsed: ${result["elapsed"]}\n';
     res += 'Success: ${result["success"]}';
     if (result["premature_failure"]) {
-        res += '\nPremature Error: ${result["premature_failure_error_str"]}';
+      res += '\nPremature Error: ${result["premature_failure_error_str"]}';
     }
   }
 

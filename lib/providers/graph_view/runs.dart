@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../main.dart';
 import '../http_client.dart';
 
 final runsProvider = FutureProvider.family.autoDispose<List<Run>, String>((ref, dagName) async {
   final client = ref.watch(clientProvider);
 
-  final response = await client.get(Uri.parse('http://localhost:8000/runs/$dagName'));
+  final response = await client.get(Uri.parse('${Config.BASE_URL}${Config.RUNS}$dagName'));
 
   return (await compute(jsonDecode, response.body) as List<dynamic>)
       .cast<Map>()
@@ -40,16 +41,16 @@ final graphProvider =
     FutureProvider.autoDispose.family<(List<Map<String, dynamic>>, Run), String>((ref, dagName) async {
   final run = ref.watch(selectedRunDropDownProvider(dagName));
 
-  var path = '/graph/${run.runId}';
+  var path = '${Config.GRAPHS}${run.runId}';
 
   if (run.runId == "default") {
-    path = '/default_graph/$dagName';
+    path = '${Config.DEFAULT_GRAPHS}$dagName';
   }
   final client = ref.watch(clientProvider);
 
   // final client = http.Client();
   // ref.onDispose(client.close);
-  final response = await client.get(Uri.parse('http://localhost:8000$path'));
+  final response = await client.get(Uri.parse('${Config.BASE_URL}$path'));
   ref.keepAlive();
 
   final map = (await compute(jsonDecode, response.body) as List<dynamic>).cast<Map<String, dynamic>>();

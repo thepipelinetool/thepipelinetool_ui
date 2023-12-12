@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -6,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retry/retry.dart';
 
 import '../classes/task_status.dart';
+import '../main.dart';
 import '../views/task_view/http_client_provider.dart';
 
 final fetchTaskStatusProvider = FutureProvider.autoDispose
@@ -14,14 +14,14 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
 
   final (runId, taskId, refresh) = args;
 
-  var path = '/task_status/$runId/$taskId';
+  var path = Uri.parse('${Config.BASE_URL}${Config.STATUSES}$runId/$taskId');
   // final client = http.Client();
   // ref.onDispose(client.close);
   final client = ref.watch(clientProvider);
 
   final response = await retry(
     // Make a GET request
-    () async => await client.get(Uri.parse('http://localhost:8000$path')),
+    () async => await client.get(path),
     // Retry on SocketException or TimeoutException
     retryIf: (e) => e is SocketException || e is TimeoutException,
   );
@@ -37,8 +37,7 @@ final fetchTaskStatusProvider = FutureProvider.autoDispose
       {TaskStatus.Pending, TaskStatus.Running, TaskStatus.Retrying}
           .contains(map)) {
     Timer.periodic(const Duration(seconds: 3), (t) async {
-      final response2 =
-          await client.get(Uri.parse('http://localhost:8000$path'));
+      final response2 = await client.get(path);
       final map2 = response2.bodyBytes.first.toTaskStatus();
       // final map2 = jsonDecode(response2.body) as Map<String, dynamic>;
       if (map2 != map) {
