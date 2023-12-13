@@ -12,7 +12,7 @@ import 'widgets/homescreen.dart';
 
 class Config {
   static const BASE_URL = "http://localhost:8000";
-  static const ALL_RUNS = "/tasks/all/";
+  static const ALL_RUNS = "/runs/all/";
   static const DAGS = "/dags";
   static const RESULTS = "/results/";
   static const RUNS = "/runs/";
