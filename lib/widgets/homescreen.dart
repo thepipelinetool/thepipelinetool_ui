@@ -25,8 +25,7 @@ class DagLink extends ConsumerWidget {
             FocusScope.of(context).requestFocus(FocusNode());
 
             // ref.invalidate(selectedItemProvider(dagName));
-            context.goNamed('dag',
-                pathParameters: {'dag_name': info.dagName});
+            context.goNamed('dag', pathParameters: {'dag_name': info.dagName});
           },
           child: Text(
             info.dagName,
@@ -175,7 +174,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 case Columns.DAG:
                   return a.dagName.compareTo(b.dagName);
                 case Columns.Schedule:
-                  if (a.options.schedule != null && b.options.schedule != null) {
+                  if (a.options.schedule != null &&
+                      b.options.schedule != null) {
                     return a.options.schedule!.compareTo(b.options.schedule!);
                   }
 
@@ -190,7 +190,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
 
                 case Columns.Next_Run:
                   // TODO
-                  return a.dagName.compareTo(b.dagName);                  
+                  return a.dagName.compareTo(b.dagName);
               }
             })),
           // SliverList.separated(
@@ -201,10 +201,10 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           //     separatorBuilder: (BuildContext context, int index) =>
           //         const Divider(),
           //   ),
-          AsyncError(:final error) => (){
-            print(error);
-            return DTS([]);
-          }(),
+          AsyncError(:final error) => () {
+              print(error);
+              return DTS([]);
+            }(),
           _ => DTS([]),
         },
         // ],

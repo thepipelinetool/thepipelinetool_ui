@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:thepipelinetool/classes/selected_task.dart';
@@ -12,7 +11,6 @@ import '../../../providers/tooltip.dart';
 const double outerCellHeight = 16;
 const double cellWidth = 10;
 const double firstCellWidth = 100;
-
 
 class MultiplicationTableCell extends ConsumerWidget {
   final String dagName;
@@ -34,7 +32,6 @@ class MultiplicationTableCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final taskStatus =
         ref.watch(fetchTaskStatusProvider((runId, value["id"], true)));
-
 
     // final vals = <String>[];
     var vals = '';
@@ -83,7 +80,8 @@ class MultiplicationTableCell extends ConsumerWidget {
         // decoration: BoxDecoration(
         border: Border(
           // top: BorderSide(width: 1.0, color: Colors.transparent),
-          bottom: BorderSide(width: 1.0, color: Color.fromRGBO(158, 158, 158, 1)),
+          bottom:
+              BorderSide(width: 1.0, color: Color.fromRGBO(158, 158, 158, 1)),
         ),
       ),
       // ),
@@ -97,9 +95,8 @@ class MultiplicationTableCell extends ConsumerWidget {
         child: MouseRegion(
           onEnter: (_) {
             // print(1);
-            ref
-                .read(hoveredTooltipProvider.notifier)
-                .state = SelectedTask(dagName: dagName,  runId: runId, taskId: value["id"].toString());
+            ref.read(hoveredTooltipProvider.notifier).state = SelectedTask(
+                dagName: dagName, runId: runId, taskId: value["id"].toString());
           },
           cursor: SystemMouseCursors.click,
           child: GestureDetector(

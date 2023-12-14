@@ -13,7 +13,8 @@ final taskInfoProvider =
 
   // print(selectedTask.taskId);
   if (selectedTask.runId == "default") {
-    path = '${Config.DEFAULT_TASKS}${selectedTask.dagName}/${selectedTask.taskId}';
+    path =
+        '${Config.DEFAULT_TASKS}${selectedTask.dagName}/${selectedTask.taskId}';
   }
   final client = ref.watch(clientProvider);
 

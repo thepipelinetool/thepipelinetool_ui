@@ -16,7 +16,8 @@ class TaskView extends ConsumerStatefulWidget {
   TaskViewState createState() => TaskViewState();
 }
 
-class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixin {
+class TaskViewState extends ConsumerState<TaskView>
+    with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 300),
     vsync: this,
@@ -42,7 +43,8 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
       AsyncData(:final value) => FadeTransition(
           opacity: _animation,
           child: TableView.builder(
-            verticalDetails: ScrollableDetails.vertical(controller: _verticalController),
+            verticalDetails:
+                ScrollableDetails.vertical(controller: _verticalController),
             cellBuilder: (BuildContext context, TableVicinity vicinity) {
               if (vicinity.column == 0 && vicinity.row == 0) {
                 return Container();
@@ -56,14 +58,15 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
                   child: GestureDetector(
                     onTap: () {
                       ref.read(selectedTaskProvider.notifier).state =
-                          SelectedTask(runId: "default", taskId: task["id"].toString(), dagName: widget.dagName);
+                          SelectedTask(
+                              runId: "default",
+                              taskId: task["id"].toString(),
+                              dagName: widget.dagName);
                       Scaffold.of(context).openEndDrawer();
                     },
                     child: Text(
                       "${task["function_name"]}_${task["id"]}",
-                      style: TextStyle(
-                        height: 1.1
-                      ),
+                      style: TextStyle(height: 1.1),
                     ),
                   ),
                 );
@@ -97,7 +100,8 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
               final task = value["tasks"][vicinity.row - 1];
               final key = '${task["function_name"]}_${task["id"]}';
               var runId = keys[vicinity.column - 1];
-              final containsFunction = value["runs"][runId]["tasks"].containsKey(key);
+              final containsFunction =
+                  value["runs"][runId]["tasks"].containsKey(key);
 
               if (containsFunction) {
                 return MultiplicationTableCell(
@@ -113,8 +117,10 @@ class TaskViewState extends ConsumerState<TaskView> with TickerProviderStateMixi
             columnCount: value["runs"].length + 1,
             columnBuilder: (int index) {
               return TableSpan(
-                foregroundDecoration: const TableSpanDecoration(border: TableSpanBorder()),
-                extent: FixedTableSpanExtent(index == 0 ? 200 : outerCellHeight),
+                foregroundDecoration:
+                    const TableSpanDecoration(border: TableSpanBorder()),
+                extent:
+                    FixedTableSpanExtent(index == 0 ? 200 : outerCellHeight),
               );
             },
             pinnedRowCount: 1,

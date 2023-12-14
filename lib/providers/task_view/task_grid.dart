@@ -28,18 +28,24 @@ import '../../main.dart';
 //       .cast<Map<String, dynamic>>();
 // });
 
-final taskGridProvider = FutureProvider.family.autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
+final taskGridProvider = FutureProvider.family
+    .autoDispose<Map<String, dynamic>, String>((ref, dagName) async {
   final client = ref.watch(clientProvider);
 
   // final taskProvider = await ref.watch(fetchTasksProvider(dagName).future);
   // final runsProvider =
   //     await ref.watch(fetchRunsWithTasksProvider(dagName).future);
 
-  final runsWithTasksResponse = await client.get(Uri.parse('${Config.BASE_URL}${Config.ALL_RUNS}$dagName'));
-  final defaultTasksResponse = await client.get(Uri.parse('${Config.BASE_URL}${Config.DEFAULT_TASKS}$dagName'));
+  final runsWithTasksResponse = await client
+      .get(Uri.parse('${Config.BASE_URL}${Config.ALL_RUNS}$dagName'));
+  final defaultTasksResponse = await client
+      .get(Uri.parse('${Config.BASE_URL}${Config.DEFAULT_TASKS}$dagName'));
 
   return {
-    'tasks': (await compute(jsonDecode, defaultTasksResponse.body) as List<dynamic>).cast<Map<String, dynamic>>(),
-    'runs': await compute(jsonDecode, runsWithTasksResponse.body) as Map<String, dynamic>,
+    'tasks':
+        (await compute(jsonDecode, defaultTasksResponse.body) as List<dynamic>)
+            .cast<Map<String, dynamic>>(),
+    'runs': await compute(jsonDecode, runsWithTasksResponse.body)
+        as Map<String, dynamic>,
   };
 });

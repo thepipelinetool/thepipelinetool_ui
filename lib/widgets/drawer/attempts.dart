@@ -25,28 +25,30 @@ class Attempts extends ConsumerWidget {
       elevation: 0,
       children: [
         for (final value in results)
-        ExpansionPanelRadio(
-          // backgroundColor: Colors.transparent,
-          canTapOnHeader: true,
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              // tileColor: Theme.of(context).primaryColor,
+          ExpansionPanelRadio(
+            // backgroundColor: Colors.transparent,
+            canTapOnHeader: true,
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return ListTile(
+                // tileColor: Theme.of(context).primaryColor,
 
-              // style: ListTileStyle.list,
-              title: Text(value["attempt"].toString()),
-            );
-          },
-          // body: v["template_args"] == null ? Container() : Container(width: 400, child: jsonView(v["template_args"], false)),
-          body: Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: kHorizontalPadding, right: kHorizontalPadding, bottom: kHorizontalPadding),
-              child: Text(encoder.convert(value["result"])),
+                // style: ListTileStyle.list,
+                title: Text(value["attempt"].toString()),
+              );
+            },
+            // body: v["template_args"] == null ? Container() : Container(width: 400, child: jsonView(v["template_args"], false)),
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                padding: const EdgeInsets.only(
+                    left: kHorizontalPadding,
+                    right: kHorizontalPadding,
+                    bottom: kHorizontalPadding),
+                child: Text(encoder.convert(value["result"])),
+              ),
             ),
+            value: value["attempt"],
           ),
-          value: value["attempt"],
-        ),
         // if (v.containsKey("results"))
         // ExpansionPanelRadio(
         //     // backgroundColor: Colors.transparent,

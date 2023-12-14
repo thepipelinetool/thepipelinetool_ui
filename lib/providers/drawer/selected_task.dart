@@ -7,5 +7,4 @@ import 'package:thepipelinetool/classes/selected_task.dart';
 //   void updateData(SelectedTask newData) => state = newData;
 // }
 
-final selectedTaskProvider =
-    StateProvider<SelectedTask?>((ref) => null);
+final selectedTaskProvider = StateProvider<SelectedTask?>((ref) => null);

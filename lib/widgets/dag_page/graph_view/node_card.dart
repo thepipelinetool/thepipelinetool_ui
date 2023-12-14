@@ -30,7 +30,8 @@ class NodeCard extends ConsumerWidget {
 
     if (run.runId != "default") {
       // print((dagName.runtimeType, runId.runtimeType, info["id"].runtimeType));
-      final taskStatus = ref.watch(fetchTaskStatusProvider((run.runId, int.parse(info["id"]), true)));
+      final taskStatus = ref.watch(
+          fetchTaskStatusProvider((run.runId, int.parse(info["id"]), true)));
 
       var status = TaskStatus.None;
 
@@ -62,9 +63,8 @@ class NodeCard extends ConsumerWidget {
         MouseRegion(
       onEnter: (_) {
         // print(1);
-        ref
-            .read(hoveredTooltipProvider.notifier)
-            .state = SelectedTask(dagName: dagName, runId: run.runId, taskId: info["id"].toString());
+        ref.read(hoveredTooltipProvider.notifier).state = SelectedTask(
+            dagName: dagName, runId: run.runId, taskId: info["id"].toString());
       },
       cursor: SystemMouseCursors.click,
       child: Container(

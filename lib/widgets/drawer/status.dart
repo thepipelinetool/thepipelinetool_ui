@@ -15,12 +15,11 @@ class Status extends ConsumerWidget {
 
     return switch (status) {
       AsyncData(:final value) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(border: Border.all(
-          width: 4,
-          color: getColorByStatus(value)
-        ), borderRadius: BorderRadius.circular(5)),
-        child: Center(child: Text(value.toString()))),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+              border: Border.all(width: 4, color: getColorByStatus(value)),
+              borderRadius: BorderRadius.circular(5)),
+          child: Center(child: Text(value.toString()))),
       (_) => Container(child: const Center(child: Text('')))
     };
   }

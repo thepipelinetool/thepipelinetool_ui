@@ -25,7 +25,8 @@ class MyAppBar extends ConsumerWidget {
               },
               child: const Text(
                 'DAGS',
-                style: TextStyle(decoration: TextDecoration.underline), // optional
+                style:
+                    TextStyle(decoration: TextDecoration.underline), // optional
               ),
             ),
           ),

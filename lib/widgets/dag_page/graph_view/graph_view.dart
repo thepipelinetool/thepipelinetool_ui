@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphite/graphite.dart';
@@ -40,7 +39,8 @@ class GraphView extends ConsumerStatefulWidget {
     ..strokeWidth = 2;
 }
 
-class GraphViewState extends ConsumerState<GraphView> with TickerProviderStateMixin {
+class GraphViewState extends ConsumerState<GraphView>
+    with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
@@ -81,7 +81,10 @@ class GraphViewState extends ConsumerState<GraphView> with TickerProviderStateMi
             alignment: Alignment.centerLeft,
             child: DropdownButton<Run>(
               value: ref.watch(selectedRunDropDownProvider(widget.dagName)),
-              items: (switch (runs) { AsyncData(:final value) => value, (_) => [ Run.defaultRun] })
+              items: (switch (runs) {
+                AsyncData(:final value) => value,
+                (_) => [Run.defaultRun]
+              })
                   .map<DropdownMenuItem<Run>>(
                 (Run value) {
                   return DropdownMenuItem<Run>(
@@ -91,7 +94,9 @@ class GraphViewState extends ConsumerState<GraphView> with TickerProviderStateMi
                 },
               ).toList(),
               onChanged: (Run? newValue) {
-                ref.read(selectedRunDropDownProvider(widget.dagName).notifier).state = newValue!;
+                ref
+                    .read(selectedRunDropDownProvider(widget.dagName).notifier)
+                    .state = newValue!;
                 FocusScope.of(context).requestFocus(FocusNode());
               },
             ),
@@ -125,15 +130,18 @@ class GraphViewState extends ConsumerState<GraphView> with TickerProviderStateMi
                         // print("${edge.from.id}->${edge.to.id}");
                       },
                       nodeBuilder: (ctx, node) {
-                        return NodeCard(dagName: widget.dagName, info: map[node.id]);
+                        return NodeCard(
+                            dagName: widget.dagName, info: map[node.id]);
                       },
                       paintBuilder: (edge) {
                         return GraphView.p;
                       },
                       onNodeTapUp: (_, node, __) {
-                        ref
-                            .read(selectedTaskProvider.notifier)
-                            .state = SelectedTask(runId: run.runId, taskId: node.id, dagName: widget.dagName);
+                        ref.read(selectedTaskProvider.notifier).state =
+                            SelectedTask(
+                                runId: run.runId,
+                                taskId: node.id,
+                                dagName: widget.dagName);
                         Scaffold.of(context).openEndDrawer();
                       },
                     ),
