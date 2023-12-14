@@ -1,6 +1,5 @@
 class DagOptions {
   final bool catchup;
-  final String dagName;
   final DateTime? endDate;
   final int maxAttempts;
   final Duration retryDelay;
@@ -10,7 +9,6 @@ class DagOptions {
 
   DagOptions({
     required this.catchup,
-    required this.dagName,
     this.endDate,
     required this.maxAttempts,
     required this.retryDelay,
@@ -22,7 +20,6 @@ class DagOptions {
   factory DagOptions.fromJson(Map<String, dynamic> json) {
     return DagOptions(
       catchup: json['catchup'] ?? false,
-      dagName: json['dag_name'] ?? '',
       endDate:
           json['end_date'] != null ? DateTime.tryParse(json['end_date']) : null,
       maxAttempts: json['max_attempts'] ?? 1,
@@ -45,7 +42,6 @@ class DagOptions {
   Map<String, dynamic> toJson() {
     return {
       'catchup': catchup,
-      'dag_name': dagName,
       'end_date': endDate?.toIso8601String(),
       'max_attempts': maxAttempts,
       'retry_delay': {

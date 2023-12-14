@@ -4,6 +4,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thepipelinetool/classes/dag_info.dart';
 import 'package:thepipelinetool/widgets/appbar.dart';
 import 'package:thepipelinetool/classes/dag_options.dart';
 import 'package:thepipelinetool/providers/dags.dart';
@@ -12,8 +13,8 @@ import 'package:thepipelinetool/providers/dags.dart';
 import 'dag_page/dag_page.dart';
 
 class DagLink extends ConsumerWidget {
-  final DagOptions dagOptions;
-  const DagLink({super.key, required this.dagOptions});
+  final DagInfo info;
+  const DagLink({super.key, required this.info});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => MouseRegion(
@@ -25,10 +26,10 @@ class DagLink extends ConsumerWidget {
 
             // ref.invalidate(selectedItemProvider(dagName));
             context.goNamed('dag',
-                pathParameters: {'dag_name': dagOptions.dagName});
+                pathParameters: {'dag_name': info.dagName});
           },
           child: Text(
-            dagOptions.dagName,
+            info.dagName,
             // style: const TextStyle(
             //     decoration: TextDecoration.underline), // optional
           ),
@@ -37,20 +38,20 @@ class DagLink extends ConsumerWidget {
 }
 
 class DTS extends DataTableSource {
-  final List<DagOptions> allDagOptions;
-  DTS(this.allDagOptions);
+  final List<DagInfo> all;
+  DTS(this.all);
 
   @override
   DataRow getRow(int index) {
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(DagLink(dagOptions: allDagOptions[index])),
-        DataCell(Text(allDagOptions[index].schedule ?? '')),
+        DataCell(DagLink(info: all[index])),
+        DataCell(Text(all[index].options.schedule ?? '')),
 
         // Text(allDagOptions[index].dagName)),
-        // DataCell(Text('#cel2$index')),
-        // DataCell(Text('#cel3$index')),
+        DataCell(Text(all[index].lastRun?.toIso8601String() ?? '')),
+        DataCell(Text(all[index].nextRun?.toIso8601String() ?? '')),
         // DataCell(Text('#cel4$index')),
         // DataCell(Text('#cel5$index')),
         // DataCell(Text('#cel6$index')),
@@ -62,7 +63,7 @@ class DTS extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => allDagOptions.length;
+  int get rowCount => all.length;
 
   @override
   int get selectedRowCount => 0;
@@ -82,6 +83,8 @@ enum Columns {
   // maxAttempts;
   // retryDelay;
   Schedule,
+  Last_Run,
+  Next_Run,
   // startDate;
   // timeout;
 }
@@ -136,7 +139,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         sortColumnIndex: sortColumn,
         sortAscending: ascending,
         columns: Columns.values
-            .map((e) => e.name)
+            .map((e) => e.name.replaceFirst('_', ' '))
             .map((e) => DataColumn(
                   label: Text(e),
                   onSort: (int columnIndex, bool ascending_) {
@@ -172,15 +175,22 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                 case Columns.DAG:
                   return a.dagName.compareTo(b.dagName);
                 case Columns.Schedule:
-                  if (a.schedule != null && b.schedule != null) {
-                    return a.schedule!.compareTo(b.schedule!);
+                  if (a.options.schedule != null && b.options.schedule != null) {
+                    return a.options.schedule!.compareTo(b.options.schedule!);
                   }
 
-                  if (b.schedule == null) {
+                  if (b.options.schedule == null) {
                     return -1;
                   }
 
                   return 1;
+                case Columns.Last_Run:
+                  // TODO
+                  return a.dagName.compareTo(b.dagName);
+
+                case Columns.Next_Run:
+                  // TODO
+                  return a.dagName.compareTo(b.dagName);                  
               }
             })),
           // SliverList.separated(
@@ -191,7 +201,10 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
           //     separatorBuilder: (BuildContext context, int index) =>
           //         const Divider(),
           //   ),
-          AsyncError() => DTS([]),
+          AsyncError(:final error) => (){
+            print(error);
+            return DTS([]);
+          }(),
           _ => DTS([]),
         },
         // ],
