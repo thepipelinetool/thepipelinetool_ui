@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 
 import '../main.dart';
 import 'dag_page/dag_page.dart';
+import 'dag_page/task_view/table_cell.dart';
 
 class DagLink extends ConsumerWidget {
   final DagInfo info;
@@ -48,6 +49,36 @@ class DTS extends DataTableSource {
       index: index,
       cells: [
         DataCell(DagLink(info: all[index])),
+        DataCell(
+          SizedBox(
+            width: 200,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                for (int i = 0; i < 10; i++)
+                  Padding(
+                    padding:
+                        i == 0 ? EdgeInsets.zero : EdgeInsets.only(left: 2),
+                    child: GestureDetector(
+                      onTap: () async {
+                        // String url =
+                        //     "${Config.BASE_URL}${Config.TRIGGER}${all[index].dagName}";
+                        // final response = await http.get(Uri.parse(url));
+                      },
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: Container(
+                          color: Colors.green,
+                          width: cellWidth,
+                          height: i * 1.0, // TODO replace with elapsed time
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
         DataCell(Text(all[index].options.schedule ?? '')),
 
         // Text(allDagOptions[index].dagName)),
@@ -56,7 +87,8 @@ class DTS extends DataTableSource {
         DataCell(
           GestureDetector(
             onTap: () async {
-              String url = "${Config.BASE_URL}${Config.TRIGGER}${all[index].dagName}";
+              String url =
+                  "${Config.BASE_URL}${Config.TRIGGER}${all[index].dagName}";
               final response = await http.get(Uri.parse(url));
             },
             child: MouseRegion(
@@ -95,6 +127,7 @@ enum Columns {
   // endDate;
   // maxAttempts;
   // retryDelay;
+  Runs,
   Schedule,
   Last_Run,
   Next_Run,
