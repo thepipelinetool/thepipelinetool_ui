@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:thepipelinetool/widgets/appbar.dart';
 import 'package:thepipelinetool/widgets/drawer/drawer.dart';
 import 'package:thepipelinetool/widgets/dag_page/graph_view/graph_view.dart';
+import 'package:http/http.dart' as http;
 
+import '../../main.dart';
 import 'task_view/task_view.dart';
 
 class DetailsPage extends ConsumerStatefulWidget {
@@ -132,7 +134,19 @@ class DetailsPageState extends ConsumerState<DetailsPage>
                             // color: Colors.white
                           ),
                         ),
-                      )
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () async {
+                          String url =
+                              "${Config.BASE_URL}${Config.TRIGGER}${widget.dagName}";
+                          final response = await http.get(Uri.parse(url));
+                        },
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Icon(Icons.play_arrow),
+                        ),
+                      ),
                     ],
                   ),
                 ),
