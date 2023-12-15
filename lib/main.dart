@@ -21,6 +21,7 @@ class Config {
   static const STATUSES = "/statuses/";
   static const GRAPHS = "/graphs/";
   static const DEFAULT_GRAPHS = "/graphs/default/";
+  static const TRIGGER = "/trigger/";
 }
 
 /// This sample app shows an app with two screens.

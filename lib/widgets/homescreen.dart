@@ -9,7 +9,9 @@ import 'package:thepipelinetool/widgets/appbar.dart';
 import 'package:thepipelinetool/classes/dag_options.dart';
 import 'package:thepipelinetool/providers/dags.dart';
 // import 'package:thepipelinetool/homescreen_row.dart';
+import 'package:http/http.dart' as http;
 
+import '../main.dart';
 import 'dag_page/dag_page.dart';
 
 class DagLink extends ConsumerWidget {
@@ -51,6 +53,18 @@ class DTS extends DataTableSource {
         // Text(allDagOptions[index].dagName)),
         DataCell(Text(all[index].lastRun?.toIso8601String() ?? '')),
         DataCell(Text(all[index].nextRun?.toIso8601String() ?? '')),
+        DataCell(
+          GestureDetector(
+            onTap: () async {
+              String url = "${Config.BASE_URL}${Config.TRIGGER}${all[index].dagName}";
+              final response = await http.get(Uri.parse(url));
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Icon(Icons.play_arrow),
+            ),
+          ),
+        ),
         // DataCell(Text('#cel4$index')),
         // DataCell(Text('#cel5$index')),
         // DataCell(Text('#cel6$index')),
@@ -84,6 +98,7 @@ enum Columns {
   Schedule,
   Last_Run,
   Next_Run,
+  Actions,
   // startDate;
   // timeout;
 }
@@ -138,15 +153,17 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         sortColumnIndex: sortColumn,
         sortAscending: ascending,
         columns: Columns.values
-            .map((e) => e.name.replaceFirst('_', ' '))
             .map((e) => DataColumn(
-                  label: Text(e),
-                  onSort: (int columnIndex, bool ascending_) {
-                    setState(() {
-                      sortColumn = columnIndex;
-                      ascending = ascending_;
-                    });
-                  },
+                  label: Text(e.name.replaceFirst('_', ' ')),
+                  onSort: ![Columns.DAG].contains(e)
+                      ? null
+                      : // TODO more sortable columns?
+                      (int columnIndex, bool ascending_) {
+                          setState(() {
+                            sortColumn = columnIndex;
+                            ascending = ascending_;
+                          });
+                        },
                 ))
             .toList(),
         source:
@@ -184,13 +201,14 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                   }
 
                   return 1;
-                case Columns.Last_Run:
-                  // TODO
+                default:
                   return a.dagName.compareTo(b.dagName);
+                // case Columns.Last_Run:
+                //   // TODO
 
-                case Columns.Next_Run:
-                  // TODO
-                  return a.dagName.compareTo(b.dagName);
+                // case Columns.Next_Run:
+                //   // TODO
+                //   return a.dagName.compareTo(b.dagName);
               }
             })),
           // SliverList.separated(
