@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   retry: ^3.1.2
-  two_dimensional_scrollables: ^0.0.5
+  two_dimensional_scrollables: ^0.1.2
 
 
   # The following adds the Cupertino Icons font to your application.

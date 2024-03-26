@@ -47,13 +47,14 @@ class TaskViewState extends ConsumerState<TaskView>
                 ScrollableDetails.vertical(controller: _verticalController),
             cellBuilder: (BuildContext context, TableVicinity vicinity) {
               if (vicinity.column == 0 && vicinity.row == 0) {
-                return Container();
+                return TableViewCell(child: Container());
               }
 
               if (vicinity.column == 0) {
                 final task = value["tasks"][vicinity.row - 1];
 
-                return MouseRegion(
+                return TableViewCell(
+                    child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: () {
@@ -69,13 +70,14 @@ class TaskViewState extends ConsumerState<TaskView>
                       style: TextStyle(height: 1.1),
                     ),
                   ),
-                );
+                ));
               }
 
               var keys = value["runs"].keys.toList();
 
               if (vicinity.row == 0) {
-                return Container(
+                return TableViewCell(
+                    child: Container(
                   width: outerCellHeight,
                   height: outerCellHeight,
                   alignment: Alignment.center,
@@ -94,7 +96,7 @@ class TaskViewState extends ConsumerState<TaskView>
                       ),
                     ),
                   ),
-                );
+                ));
               }
 
               final task = value["tasks"][vicinity.row - 1];
@@ -104,14 +106,15 @@ class TaskViewState extends ConsumerState<TaskView>
                   value["runs"][runId]["tasks"].containsKey(key);
 
               if (containsFunction) {
-                return MultiplicationTableCell(
+                return TableViewCell(
+                    child: MultiplicationTableCell(
                   dagName: widget.dagName,
                   runId: runId,
                   value: value["runs"][runId]["tasks"][key],
-                );
+                ));
               }
 
-              return Container();
+              return TableViewCell(child: Container());
             },
             pinnedColumnCount: 1,
             columnCount: value["runs"].length + 1,
